@@ -14,6 +14,13 @@ Este projeto tem como objetivo desenvolver uma aplicação web completa para ger
 - Configure rotas para manipular os projetos, utilizando métodos HTTP adequados (GET, POST, PUT, DELETE).
 - Utilize um banco de dados (SQL ou NoSQL) para armazenar os projetos.
 
+#### Tecnologias Recomendadas:
+- **Front-end:** HTML, CSS, JavaScript, React.js
+- **Back-end:** Node.js, Express.js
+- **Banco de Dados:** SQLite (com Sequelize ou outro ORM)
+- **Autenticação:** JWT (JSON Web Tokens)
+- **Deploy:** Heroku, Vercel, ou outro serviço de hospedagem gratuito
+
 Primordial: Utilizar as cores da paleta da **Codigo Certo Coders:**
 ![Codigo Certo Coders Cores](https://github.com/codigocerto/TrilhaFrontEndJR-JUN15/assets/170693068/5ced1a97-b2c6-4f54-836c-7b3e115f879f)
 - **#000000** (preto)
