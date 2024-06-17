@@ -1,0 +1,10 @@
+:root{
+    --cor1: #000000;
+    --cor2: #e53939;
+    --cor3: #ffffff;
+}
+
+h1{
+    color: var(--cor2);
+    background-color: var(--cor1);
+}
