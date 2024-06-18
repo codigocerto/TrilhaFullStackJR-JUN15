@@ -38,3 +38,7 @@
     display: flex;
     gap: 10px;
 }
+
+.check-remove{
+    display: flex;
+}

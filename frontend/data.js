@@ -39,7 +39,37 @@ export async function addProjeto(dadosProjeto){
         return data;
     }
     catch(error){
-        alert("Couldn't add Group");
+        alert("O projeto nao pôde ser inserido");
+        console.error(error);
+    }
+
+}
+
+export async function removerProjeto(ids){
+    const options = {
+        method: 'DELETE',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({"ids": ids})
+    };
+
+    try{
+        const response = await fetch(`${URL}/projetos`, options);
+        
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        
+        const data = await response.json();
+
+        if(data["projetos não encontrados"].length > 0){
+            throw new Error(`O seguintes projetos nao puderam ser removidos ${data["projetos não encontrados"].join(" ")}`);
+        }
+        return data;
+    }
+    catch(error){
+        alert("O projeto nao pôde ser removido");
         console.error(error);
     }
 

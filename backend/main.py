@@ -128,6 +128,6 @@ async def remover_multiplos_projetos(projeto_delete: ProjetosDelete, session: Se
             projetos_nao_encontrados.append(id)
 
     return {"projetos deletados": projetos_deletados,
-            "projetos não encontrados": projetos_nao_encontrados if projetos_nao_encontrados else 0}
+            "projetos não encontrados": projetos_nao_encontrados if projetos_nao_encontrados else []}
 
     

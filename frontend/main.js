@@ -1,9 +1,10 @@
-import { showProjeto } from "./ui.js";
+import { showProjeto } from "./ui_pagina_projetos.js";
+import { showRemoverProjetos } from "./ui_remover_projetos.js";
 
-export const botaoProjetos = $("#projetos");
-export const botaoAdicionar = $("#adicionar");
-export const botaoEditar = $("#editar");
-export const botaoRemover = $("#remover");
+const botaoProjetos = $("#projetos");
+const botaoAdicionar = $("#adicionar");
+const botaoEditar = $("#editar");
+const botaoRemover = $("#remover");
 
 
 botaoProjetos.on("click", () => {
@@ -23,6 +24,8 @@ botaoEditar.on("click", () => {
 botaoRemover.on("click", () => {
     $(".nav-link").removeClass("active");
     botaoRemover.addClass("active");
+    showRemoverProjetos();
 });
 
-showProjeto(); //// Função de teste
+// botaoProjetos.click()
+botaoRemover.click();
