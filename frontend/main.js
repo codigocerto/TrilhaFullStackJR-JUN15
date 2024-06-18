@@ -24,3 +24,5 @@ botaoRemover.on("click", () => {
     $(".nav-link").removeClass("active");
     botaoRemover.addClass("active");
 });
+
+showProjeto(); //// Função de teste

@@ -83,11 +83,11 @@ async def alterar_projeto(projeto_update: ProjetoUpdate, session: Session = Depe
     if not projeto:
         raise HTTPException(status_code=404, detail='Projeto não encontrado')
     
-    if projeto_update.nome.strip():
+    if projeto_update.nome.strip() != "":
         projeto.nome = projeto_update.nome.strip()
-    if projeto_update.descricao:
+    if projeto_update.descricao != "":
         projeto.descricao = projeto_update.descricao
-    if projeto_update.prazo:
+    if projeto_update.prazo != "":
         projeto.prazo = projeto_update.prazo
     
     session.add(projeto)
