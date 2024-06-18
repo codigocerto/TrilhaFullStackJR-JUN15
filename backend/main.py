@@ -1,9 +1,19 @@
 from datetime import datetime, timezone
 from fastapi import Depends, FastAPI, HTTPException
+from fastapi.middleware.cors import CORSMiddleware
 from backend.models import MultProjetosInput, ProjetoDelete, ProjetoInput, ProjetoUpdate, ProjetosDelete
 from backend.schema import Projeto, get_session, Session
 
 app = FastAPI(title="Gerenciamento de Projetos")
+
+app.add_middleware(
+    CORSMiddleware,
+    # allow_origins=["*"],
+    allow_origins=["http://127.0.0.1:2129", "http://localhost:2129"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 @app.get('/')
 async def root():

@@ -1,10 +1,30 @@
 :root{
-    --cor1: #000000;
-    --cor2: #e53939;
-    --cor3: #ffffff;
+    --preto: #000000;
+
+    --vermelho1: #b91818;
+    --vermelho2: #d01b1b;
+    --vermelho3: #e22222;
+    --vermelho4-main: #e53939;
+    --vermelho5: #e85050;
+    --vermelho6: #eb6666;
+    --vermelho7: #ee7d7d; 
+
+    --branco: #ffffff;
+}
+#area{
+    display: flex;
+    height: calc(100vh - 42px);
 }
 
-h1{
-    color: var(--cor2);
-    background-color: var(--cor1);
+#view{
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+#lista-projetos{
+    max-height: 100vh;
+    overflow-y: auto;
 }
