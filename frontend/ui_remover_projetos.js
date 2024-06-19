@@ -50,8 +50,38 @@ function createListaParaRemover(removerSet, projetos, pureText=false){
     return listaNomes.map(item => `<li class="list-group-item">${item}</li>`);
 }
 
+function criarListaProjetos(projetos, setRemover){
+    listaProjetos.empty();
+    
+    projetos.forEach(projeto => {
+        const itemLista = criarItemLista(projeto.id, projeto.nome, projeto.descricao, projeto.prazo, projeto.criacao);
+        listaProjetos.append(itemLista);
+    });
+
+    const checkboxes = listaProjetos.find(`[type="checkbox"]`);
+    
+    checkboxes.on("change", event => {
+        const elemento = event.target;
+        if(elemento.checked){
+            setRemover.add(elemento.value);
+        }
+        else{
+            setRemover.delete(elemento.value);
+        }
+        console.log(setRemover, projetos);
+        listaParaRemover.html(createListaParaRemover(setRemover, projetos));
+        if(setRemover.size === 0){
+            removerBotao.addClass("disabled");
+        }
+        else{
+            removerBotao.removeClass("disabled");
+        }
+
+    })
+}   
+
 export async function showRemoverProjetos() {
-    const projetos = await getProjetos();
+    let projetos = await getProjetos();
 
     let setRemover = new Set();
 
@@ -72,7 +102,7 @@ export async function showRemoverProjetos() {
 
     projetoView.append(projetoViewBox);
     
-    removerBotao.on("click", () => {
+    removerBotao.on("click", async() => {
         if(!setRemover.size){
             return;
         }
@@ -81,7 +111,10 @@ export async function showRemoverProjetos() {
             const arrayIdNumeros = Array.from(setRemover).map(id => Number(id));
             removerProjeto(arrayIdNumeros);
             setRemover.clear();
-            showRemoverProjetos();
+            listaParaRemover.html(createListaParaRemover(setRemover, projetos));
+            
+            projetos = await getProjetos();
+            criarListaProjetos(projetos, setRemover);
 
         }
     })
@@ -89,29 +122,8 @@ export async function showRemoverProjetos() {
     projetoViewBoxText.append(listaParaRemover, removerBotao);
     projetoViewBox.append(projetoViewBoxText);
 
-    projetos.forEach(projeto => {
-        const itemLista = criarItemLista(projeto.id, projeto.nome, projeto.descricao, projeto.prazo, projeto.criacao);
-        listaProjetos.append(itemLista);
-    });
+    criarListaProjetos(projetos, setRemover);
 
-    const checkboxes = listaProjetos.find(`[type="checkbox"]`);
-    
-    checkboxes.on("change", event => {
-        const elemento = event.target;
-        if(elemento.checked){
-            setRemover.add(elemento.value);
-        }
-        else{
-            setRemover.delete(elemento.value);
-        }
-        listaParaRemover.html(createListaParaRemover(setRemover, projetos));
-        if(setRemover.size === 0){
-            removerBotao.addClass("disabled");
-        }
-        else{
-            removerBotao.removeClass("disabled");
-        }
 
-    })
 
 }

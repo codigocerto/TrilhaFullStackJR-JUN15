@@ -38,7 +38,7 @@ const inputPrazo = adicionarForm.find("#floatingPrazo");
 
 function criarItemLista(id, nome, descricao, prazo, criacao) {
 
-    const itemLista = $(`<a id="${id}" role="button" class="list-group-item list-group-item-action py-3 lh-sm" aria-current="true">
+    const itemLista = $(`<a id="${id}" role="button" class="disabled list-group-item list-group-item-action py-3 lh-sm" aria-current="true">
                             <div class="d-flex w-100 align-items-center justify-content-between">
                                 <strong class="mb-1 px-2">${nome}</strong>
                                 <small>${tempoRestante(prazo)}</small>
@@ -48,9 +48,19 @@ function criarItemLista(id, nome, descricao, prazo, criacao) {
     return itemLista;
 }
 
-export async function showAdicionarProjeto() {
-    const projetos = await getProjetos();
+function criarListaProjetos(projetos){
+    
+    listaProjetos.empty();
+    projetos.forEach(projeto => {
 
+        const itemLista = criarItemLista(projeto.id, projeto.nome, projeto.descricao, projeto.prazo, projeto.criacao);
+        listaProjetos.append(itemLista);
+    });
+}
+
+export async function showAdicionarProjeto() {
+    
+    let projetos = await getProjetos();
     
     listaProjetos.empty();
     projetoView.empty();
@@ -72,11 +82,7 @@ export async function showAdicionarProjeto() {
     </svg>`)
     titulo.prepend(icon);
 
-    projetos.forEach(projeto => {
-
-        const itemLista = criarItemLista(projeto.id, projeto.nome, projeto.descricao, projeto.prazo, projeto.criacao);
-        listaProjetos.append(itemLista);
-    });
+    criarListaProjetos(projetos);
 
     adicionarBotao.attr("disabled", true);
     inputPrazo.attr("disabled", true);
@@ -84,7 +90,7 @@ export async function showAdicionarProjeto() {
     
     inputNomeProjeto.on("change", event => {
         const elemento = event.target;
-        if(elemento.value){
+        if(elemento.value !== ''){
             adicionarBotao.attr("disabled", false);
         }
         else{
@@ -103,7 +109,7 @@ export async function showAdicionarProjeto() {
         }
     });
 
-    adicionarBotao.on("click", () => {
+    adicionarBotao.on("click", async() => {
 
         const nome = inputNomeProjeto.val();
         const descricao = inputDescricaoProjeto.val();
@@ -113,5 +119,8 @@ export async function showAdicionarProjeto() {
         const novoProjeto = {nome, descricao, prazo}
         
         addProjeto(novoProjeto);
+        projetos = await getProjetos();
+        criarListaProjetos(projetos);
+        listaProjetos[0].scrollTop = listaProjetos[0].scrollHeight;
     });
 }
