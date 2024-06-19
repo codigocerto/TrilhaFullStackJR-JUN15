@@ -32,6 +32,7 @@ export async function addProjeto(dadosProjeto){
         const response = await fetch(`${URL}/projeto`, options);
         
         if (!response.ok) {
+            console.log(JSON.stringify(dadosProjeto));
             throw new Error(`HTTP error! status: ${response.status}`);
         }
         

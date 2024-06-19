@@ -5,14 +5,14 @@ const listaProjetos = $("#lista-projetos");
 const titulo = $("#titulo-lista");
 
 
-function criarPaginaProjeto(id, nome, descricao, prazo, criacao) {
+function criarPaginaProjeto(nome, descricao, prazo, criacao) {
     projetoView.empty();
+    console.log(criacao)
+    const dateCriacao = new Date(criacao + 'Z');
+    const datePrazo = new Date(prazo  + 'Z');
 
-    const dateCriacao = new Date(criacao);
-    const datePrazo = new Date(prazo);
-
-    const labelCriacao = `<p>Criado: ${dateCriacao.toLocaleDateString('pt-BR', { timeZone: 'UTC'})} </p>`;
-    const labelPrazo = prazo ? `<p>Prazo: ${datePrazo.toLocaleDateString('pt-BR', { timeZone: 'UTC'})}</p>` : "";
+    const labelCriacao = `<p>Criado: ${dateCriacao.toLocaleDateString('pt-BR')} </p>`;
+    const labelPrazo = prazo ? `<p>Prazo: ${datePrazo.toLocaleDateString('pt-BR')}</p>` : "";
 
     const projetoViewBox = $(
         `<div class="container my-5">
@@ -29,14 +29,14 @@ function criarPaginaProjeto(id, nome, descricao, prazo, criacao) {
 }
 
 //Essa função recebe a data do prazo e retorna um texto simples indicando o prazo
-function tempoRestante(prazo){
+export function tempoRestante(prazo){
     
     if(!prazo){
         return "";
     }
     
     const nowDate = Date.now();
-    const prazoDate = Date.parse(prazo)
+    const prazoDate = Date.parse(prazo + 'Z')
 
     const dataDoPrazo = new Date(prazoDate)
     const dataDeAgora = new Date(nowDate);
@@ -56,7 +56,11 @@ function tempoRestante(prazo){
     if(dataDoPrazo.getDate() - dataDeAgora.getDate() > 0){
         return "Amanhã";
     }
-    return "Hoje";
+    
+    if(dataDoPrazo.getDate() - dataDeAgora.getDate() === 0){
+        return "Hoje";
+    }
+    return "Vencido";
 
 }
 
@@ -70,7 +74,7 @@ function criarItemLista(id, nome, descricao, prazo, criacao) {
                         </a>`);
 
     itemLista.on("click", () => {
-        criarPaginaProjeto(id, nome, descricao, prazo, criacao);
+        criarPaginaProjeto(nome, descricao, prazo, criacao);
     })
     return itemLista;
 }
@@ -90,10 +94,9 @@ export async function showProjeto() {
     
     titulo.text("   Lista de Projetos");
     const icon = $(`
-    <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-list-task" viewBox="0 0 16 16">
-        <path fill-rule="evenodd" d="M2 2.5a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5V3a.5.5 0 0 0-.5-.5zM3 3H2v1h1z"/>
-        <path d="M5 3.5a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5M5.5 7a.5.5 0 0 0 0 1h9a.5.5 0 0 0 0-1zm0 4a.5.5 0 0 0 0 1h9a.5.5 0 0 0 0-1z"/>
-        <path fill-rule="evenodd" d="M1.5 7a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5H2a.5.5 0 0 1-.5-.5zM2 7h1v1H2zm0 3.5a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5zm1 .5H2v1h1z"/>
+    <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-journals" viewBox="0 0 16 16">
+        <path d="M5 0h8a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2 2 2 0 0 1-2 2H3a2 2 0 0 1-2-2h1a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V4a1 1 0 0 0-1-1H3a1 1 0 0 0-1 1H1a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v9a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H5a1 1 0 0 0-1 1H3a2 2 0 0 1 2-2"/>
+        <path d="M1 6v-.5a.5.5 0 0 1 1 0V6h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1zm0 3v-.5a.5.5 0 0 1 1 0V9h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1zm0 2.5v.5H.5a.5.5 0 0 0 0 1h2a.5.5 0 0 0 0-1H2v-.5a.5.5 0 0 0-1 0"/>
     </svg>`)
     titulo.prepend(icon);
 
