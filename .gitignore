@@ -4,6 +4,7 @@ backend/__pycache__/schema.cpython-312.pyc
 backend/projetos_database.db
 node_modules/
 frontend/styles.css.map
+frontend/styles.css
 frontend/styles-raw.css
 package-lock.json
 package.json
