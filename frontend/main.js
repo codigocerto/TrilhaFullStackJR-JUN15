@@ -31,7 +31,7 @@ botaoRemover.on("click", () => {
     showRemoverProjetos();
 });
 
-// botaoProjetos.click()
-// botaoRemover.click();
+botaoProjetos.click()
 // botaoAdicionar.click();
-showEditarProjeto();
+// botaoEditar.click();
+// botaoRemover.click();

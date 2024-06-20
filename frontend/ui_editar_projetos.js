@@ -81,23 +81,38 @@ function criarPaginaProjeto(id, nome, descricao, prazo, criacao) {
         
         adicionarForm.on("submit", async(e) => {
             e.preventDefault();
-            const nomeEdit = inputNomeProjeto.val() !== nome ? inputNomeProjeto.val() : "";
-            const descricaoEdit = inputDescricaoProjeto.val() !== descricao ? inputDescricaoProjeto.val() : "";
-            const prazoEdit = inputCheckPrazo.is(":checked") ? new Date(inputPrazo.val() + "T23:59:59") : null;
-            console.log(prazoEdit === prazo)
+
+            let nomeEdit = inputNomeProjeto.val();
+            let descricaoEdit = inputDescricaoProjeto.val();
+            
+            let prazoEdit = inputCheckPrazo.is(":checked") ? (inputPrazo.val() ? new Date(inputPrazo.val() + "T23:59:59Z") : null) : null;
+            // try{prazoEdit = prazoEdit.toISOString().replace(".000Z", "")  + "T23:59:59";}
+            // catch{prazoEdit = null;}
+
+            let nomeHasChanged = nomeEdit!== nome;
+            let descricaoHasChanged = descricaoEdit !== descricao;
+            let prazoHasChanged = prazo && prazoEdit ? prazoEdit.toISOString().slice(0, 10) !== prazo.slice(0, 10) : prazoEdit !== prazo;
+   
+
+            //caso não haja alteração nos valores, a função é retornada e encerrada
+            if(!nomeHasChanged && !descricaoHasChanged && !prazoHasChanged){
+                return;
+            }
 
             const novoProjeto = {
                 id,
-                nome: nomeEdit, 
-                descricao: descricaoEdit,
-                prazo: prazoEdit
+                nome: nomeHasChanged ? nomeEdit : "", 
+                descricao: descricaoHasChanged ? descricaoEdit : "",
+                prazo: prazoHasChanged ? prazoEdit : prazo
             }
-
-            console.log(novoProjeto);
             
             editarProjeto(novoProjeto);
     
             const projetos = await getProjetos();
+            if(!projetos){
+                alert("Erro na atualização do Projeto!")
+                return;
+            }
             criarListaProjetos(projetos)
             adicionarForm.find("h1").text(`Editar ${nomeEdit || nome}`);
             alert(`${nomeEdit || nome} atualizado com sucesso!`);
