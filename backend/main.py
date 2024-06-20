@@ -34,7 +34,6 @@ async def registrar_projeto(projeto_input: ProjetoInput, session: Session = Depe
     if(not projeto_input.nome.strip()):
        raise HTTPException(status_code=422, detail='O nome do projeto não pode ser vazio')
     
-    print(projeto_input.prazo, datetime.now(timezone.utc))
     if(projeto_input.prazo and projeto_input.prazo < datetime.now(timezone.utc)):
         raise HTTPException(status_code=422, detail='O prazo já está vencido')
     

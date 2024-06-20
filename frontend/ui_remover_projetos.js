@@ -7,9 +7,9 @@ const titulo = $("#titulo-lista");
    
 const projetoViewBox = $(`<div class="container my-5"></div>`);
 const projetoViewBoxText = $(`<div id="view-box-text" class="p-5 text-center bg-body-tertiary rounded-3"></div>`);
+const removerBotao = $(`<button type="button" class="btn btn-danger mt-4">Confirmar exclusão</button>`);
 
 const listaParaRemover = $(`<ul class="list-group"></ul>`)
-const removerBotao = $(`<button type="button" class="btn btn-danger mt-4 disabled">Confirmar exclusão</button>`);
 
 function criarItemLista(id, nome) {
 
@@ -68,7 +68,6 @@ function criarListaProjetos(projetos, setRemover){
         else{
             setRemover.delete(elemento.value);
         }
-        console.log(setRemover, projetos);
         listaParaRemover.html(createListaParaRemover(setRemover, projetos));
         if(setRemover.size === 0){
             removerBotao.addClass("disabled");
@@ -84,11 +83,13 @@ export async function showRemoverProjetos() {
     let projetos = await getProjetos();
 
     let setRemover = new Set();
-
+    
     listaProjetos.empty();
     projetoView.empty();
+    projetoViewBox.empty();
     setRemover.clear();
     listaParaRemover.html(`<li class="list-group-item">Selecione projetos para Remover</li>`)
+    removerBotao.addClass("disabled");
     
     
     titulo.text("   Remover Projetos");
@@ -115,6 +116,7 @@ export async function showRemoverProjetos() {
             
             projetos = await getProjetos();
             criarListaProjetos(projetos, setRemover);
+            removerBotao.addClass("disabled");
 
         }
     })

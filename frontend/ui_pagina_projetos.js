@@ -7,7 +7,6 @@ const titulo = $("#titulo-lista");
 
 function criarPaginaProjeto(nome, descricao, prazo, criacao) {
     projetoView.empty();
-    console.log(criacao)
     const dateCriacao = new Date(criacao + 'Z');
     const datePrazo = new Date(prazo  + 'Z');
 
@@ -24,7 +23,6 @@ function criarPaginaProjeto(nome, descricao, prazo, criacao) {
         </div>`);
 
     projetoView.append(projetoViewBox);
-
 
 }
 

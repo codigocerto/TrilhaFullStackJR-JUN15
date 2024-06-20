@@ -44,6 +44,32 @@ export async function addProjeto(dadosProjeto){
 
 }
 
+export async function editarProjeto(dadosProjeto){
+    const options = {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(dadosProjeto)
+    };
+
+    try{
+        const response = await fetch(`${URL}/projeto`, options);
+        
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        
+        const data = await response.json();
+        return data;
+    }
+    catch(error){
+        alert("O projeto nao pôde editado");
+        console.error(error);
+    }
+
+}
+
 export async function removerProjeto(ids){
     const options = {
         method: 'DELETE',

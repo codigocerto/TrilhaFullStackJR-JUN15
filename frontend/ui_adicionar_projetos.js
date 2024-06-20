@@ -8,9 +8,8 @@ const titulo = $("#titulo-lista");
 const projetoViewBox = $(`<div class="container my-5"></div>`);
 const projetoViewBoxText = $(`<div id="view-box-text" class="p-5 text-center bg-body-tertiary rounded-3"></div>`);
 
-const adicionarBotao = $(`<button type="button" class="btn btn-primary mt-4">Adicionar</button>`);
-
 const adicionarForm = $(`
+    <form id="add-projeto-form">
     <h1 class="text-body-emphasis mb-5">Adicionar Projeto</h1>
     <div class="form-floating mb-3">
         <input required type="text" class="form-control" id="floatingNomeProjeto" placeholder="Nome do Projeto">
@@ -29,14 +28,12 @@ const adicionarForm = $(`
     <div class="form-floating">
         <input type="date" class="form-control" id="floatingPrazo">
         <label for="floatingPrazo">Prazo do Projeto</label>
-    </div>`)
+    </div>
+    <button id="botao-submit"type="submit" class="btn btn-primary mt-4">Adicionar</button>
+    </form>`)
 
-const inputNomeProjeto = adicionarForm.find("#floatingNomeProjeto");
-const inputDescricaoProjeto = adicionarForm.find("#floatingDescricao");
-const inputCheckPrazo = adicionarForm.find("#flexCheckPrazo");
-const inputPrazo = adicionarForm.find("#floatingPrazo");
 
-function criarItemLista(id, nome, descricao, prazo, criacao) {
+function criarItemLista(id, nome, prazo) {
 
     const itemLista = $(`<a id="${id}" role="button" class="disabled list-group-item list-group-item-action py-3 lh-sm" aria-current="true">
                             <div class="d-flex w-100 align-items-center justify-content-between">
@@ -53,7 +50,7 @@ function criarListaProjetos(projetos){
     listaProjetos.empty();
     projetos.forEach(projeto => {
 
-        const itemLista = criarItemLista(projeto.id, projeto.nome, projeto.descricao, projeto.prazo, projeto.criacao);
+        const itemLista = criarItemLista(projeto.id, projeto.nome, projeto.prazo);
         listaProjetos.append(itemLista);
     });
 }
@@ -61,6 +58,11 @@ function criarListaProjetos(projetos){
 export async function showAdicionarProjeto() {
     
     let projetos = await getProjetos();
+    const inputNomeProjeto = adicionarForm.find("#floatingNomeProjeto");
+    const inputDescricaoProjeto = adicionarForm.find("#floatingDescricao");
+    const inputCheckPrazo = adicionarForm.find("#flexCheckPrazo");
+    const inputPrazo = adicionarForm.find("#floatingPrazo");
+    
     
     listaProjetos.empty();
     projetoView.empty();
@@ -68,7 +70,6 @@ export async function showAdicionarProjeto() {
     titulo.text("   Adicionar Projeto");
     
     projetoViewBoxText.append(adicionarForm);
-    projetoViewBoxText.append(adicionarBotao);
     projetoViewBox.append(projetoViewBoxText);
     
     projetoView.append(projetoViewBox);
@@ -84,20 +85,8 @@ export async function showAdicionarProjeto() {
 
     criarListaProjetos(projetos);
 
-    adicionarBotao.attr("disabled", true);
     inputPrazo.attr("disabled", true);
     inputPrazo.attr("min", new Date().toLocaleDateString('fr-ca'));
-    
-    inputNomeProjeto.on("change", event => {
-        const elemento = event.target;
-        if(elemento.value !== ''){
-            adicionarBotao.attr("disabled", false);
-        }
-        else{
-            adicionarBotao.attr("disabled", true);
-        }
-     
-    });
     
     inputCheckPrazo.on("change", event => {
         const elemento = event.target;
@@ -109,18 +98,20 @@ export async function showAdicionarProjeto() {
         }
     });
 
-    adicionarBotao.on("click", async() => {
-
+    adicionarForm.on("submit", async(e) => {
+        e.preventDefault();
         const nome = inputNomeProjeto.val();
         const descricao = inputDescricaoProjeto.val();
-        console.log(inputPrazo.val());
         const prazo = inputCheckPrazo.is(":checked") && inputPrazo.val() ? new Date(inputPrazo.val() + "T23:59:59") : null;
     
         const novoProjeto = {nome, descricao, prazo}
         
         addProjeto(novoProjeto);
-        projetos = await getProjetos();
-        criarListaProjetos(projetos);
+
+        projetos.push(novoProjeto);
+        criarListaProjetos(projetos)
+
         listaProjetos[0].scrollTop = listaProjetos[0].scrollHeight;
+
     });
 }

@@ -1,6 +1,7 @@
 import { showProjeto } from "./ui_pagina_projetos.js";
 import { showRemoverProjetos } from "./ui_remover_projetos.js";
 import { showAdicionarProjeto } from "./ui_adicionar_projetos.js";
+import { showEditarProjeto } from "./ui_editar_projetos.js";
 
 const botaoProjetos = $("#projetos");
 const botaoAdicionar = $("#adicionar");
@@ -22,6 +23,7 @@ botaoAdicionar.on("click", () => {
 botaoEditar.on("click", () => {
     $(".nav-link").removeClass("active");
     botaoEditar.addClass("active");
+    showEditarProjeto();
 });
 botaoRemover.on("click", () => {
     $(".nav-link").removeClass("active");
@@ -32,3 +34,4 @@ botaoRemover.on("click", () => {
 // botaoProjetos.click()
 // botaoRemover.click();
 // botaoAdicionar.click();
+showEditarProjeto();
