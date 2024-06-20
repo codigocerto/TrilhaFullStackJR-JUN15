@@ -7,7 +7,7 @@ const titulo = $("#titulo-lista");
    
 const projetoViewBox = $(`<div class="container my-5"></div>`);
 const projetoViewBoxText = $(`<div id="view-box-text" class="p-5 text-center bg-body-tertiary rounded-3"></div>`);
-const removerBotao = $(`<button type="button" class="btn btn-danger mt-4">Confirmar exclusão</button>`);
+const removerBotao = $(`<button type="button" class="btn btn-warning mt-4">Confirmar exclusão</button>`);
 
 const listaParaRemover = $(`<ul class="list-group"></ul>`)
 
@@ -84,6 +84,7 @@ export async function showRemoverProjetos() {
 
     let setRemover = new Set();
     
+    titulo.empty();
     listaProjetos.empty();
     projetoView.empty();
     projetoViewBox.empty();
@@ -92,14 +93,14 @@ export async function showRemoverProjetos() {
     removerBotao.addClass("disabled");
     
     
-    titulo.text("   Remover Projetos");
     const icon = $(`
-    <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-journal-x" viewBox="0 0 16 16">
+        <svg xmlns="http://www.w3.org/2000/svg" width="35" height="35" fill="currentColor" class="bi bi-journal-x" viewBox="0 0 16 16">
         <path fill-rule="evenodd" d="M6.146 6.146a.5.5 0 0 1 .708 0L8 7.293l1.146-1.147a.5.5 0 1 1 .708.708L8.707 8l1.147 1.146a.5.5 0 0 1-.708.708L8 8.707 6.854 9.854a.5.5 0 0 1-.708-.708L7.293 8 6.146 6.854a.5.5 0 0 1 0-.708"/>
         <path d="M3 0h10a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2v-1h1v1a1 1 0 0 0 1 1h10a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H3a1 1 0 0 0-1 1v1H1V2a2 2 0 0 1 2-2"/>
         <path d="M1 5v-.5a.5.5 0 0 1 1 0V5h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1zm0 3v-.5a.5.5 0 0 1 1 0V8h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1zm0 3v-.5a.5.5 0 0 1 1 0v.5h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1z"/>
-    </svg>`)
-    titulo.prepend(icon);
+        </svg>`)
+    titulo.append(icon);
+    titulo.append(`<h3>Remover Projetos</h3>`);
 
     projetoView.append(projetoViewBox);
     
@@ -110,12 +111,13 @@ export async function showRemoverProjetos() {
         if(confirm(`` + (setRemover.size < 2 ?  `${createListaParaRemover(setRemover, projetos, true) } será permanentemente excluído.`:`${setRemover.size} projetos serão permanentemente excluídos.`) + " Deseja continuar?")){
             
             const arrayIdNumeros = Array.from(setRemover).map(id => Number(id));
-            removerProjeto(arrayIdNumeros);
+            const atualizacaoProjetos = await removerProjeto(arrayIdNumeros);
+            // console.log(atualizacaoProjetos);
             setRemover.clear();
-            listaParaRemover.html(createListaParaRemover(setRemover, projetos));
+            listaParaRemover.html(createListaParaRemover(setRemover, atualizacaoProjetos["projetos"]));
             
-            projetos = await getProjetos();
-            criarListaProjetos(projetos, setRemover);
+            // projetos = await getProjetos();
+            criarListaProjetos(atualizacaoProjetos["projetos"], setRemover);
             removerBotao.addClass("disabled");
 
         }

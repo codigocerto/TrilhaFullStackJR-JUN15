@@ -6,6 +6,7 @@ const titulo = $("#titulo-lista");
 
 
 function criarPaginaProjeto(nome, descricao, prazo, criacao) {
+
     projetoView.empty();
     const dateCriacao = new Date(criacao + 'Z');
     const datePrazo = new Date(prazo  + 'Z');
@@ -22,6 +23,8 @@ function criarPaginaProjeto(nome, descricao, prazo, criacao) {
             </div>
         </div>`);
 
+   
+        console.log("oi")
     projetoView.append(projetoViewBox);
 
 }
@@ -81,22 +84,27 @@ export async function showProjeto() {
     const projetos = await getProjetos();
     listaProjetos.empty();
     projetoView.empty();
+    titulo.empty();
+    
     const projetoViewBox = $(
         `<div class="container my-5">
             <div class="p-5 text-center bg-body-tertiary rounded-3">
                 <h1 class="text-body-emphasis">Selecione um Projeto</h1>
             </div>
         </div>`);
-
+    if(!projetos.length){
+        projetoViewBox.find("h1").text("Adicione um Projeto");
+    }
     projetoView.append(projetoViewBox);
     
-    titulo.text("   Lista de Projetos");
     const icon = $(`
-    <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-journals" viewBox="0 0 16 16">
+        <svg xmlns="http://www.w3.org/2000/svg" width="35" height="35" fill="currentColor" class="bi bi-journals" viewBox="0 0 16 16">
         <path d="M5 0h8a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2 2 2 0 0 1-2 2H3a2 2 0 0 1-2-2h1a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V4a1 1 0 0 0-1-1H3a1 1 0 0 0-1 1H1a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v9a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H5a1 1 0 0 0-1 1H3a2 2 0 0 1 2-2"/>
         <path d="M1 6v-.5a.5.5 0 0 1 1 0V6h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1zm0 3v-.5a.5.5 0 0 1 1 0V9h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1zm0 2.5v.5H.5a.5.5 0 0 0 0 1h2a.5.5 0 0 0 0-1H2v-.5a.5.5 0 0 0-1 0"/>
-    </svg>`)
-    titulo.prepend(icon);
+        </svg>`)
+    titulo.append(icon);
+    titulo.append(`<h3>Lista de Projetos<h3>`);
+
 
     projetos.forEach(projeto => {
 

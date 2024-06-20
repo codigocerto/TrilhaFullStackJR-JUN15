@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="en">
+<!-- <html lang="en"  data-bs-theme="light"> -->
+<html lang="pt-BR">
 
 <head>
     <meta charset="UTF-8">
@@ -12,9 +13,9 @@
 
 <body>
     <header>
-        <ul class="nav nav-tabs">
+        <ul class="nav nav-tabs bg-primary">
             <li class="nav-item">
-                <a id="projetos" class="nav-link" aria-current="page" href="#">Projetos</a>
+                <a id="projetos" class="nav-link" href="#">Projetos</a>
             </li>
             <li class="nav-item">
                 <a id="adicionar" class="nav-link" href="#">Adicionar</a>
@@ -28,9 +29,10 @@
         </ul>
     </header>
     <section id="area">
-        <div class="d-flex flex-column align-items-stretch flex-shrink-0 bg-body-tertiary g-col-3" style="width: 380px;">
-            <a class="d-flex align-items-center flex-shrink-0 p-3 link-body-emphasis text-decoration-none border-bottom">
-                <span id="titulo-lista" class="fs-5 fw-semibold"></span>
+        <div id="sidebar" class="d-flex flex-column align-items-stretch flex-shrink-0 bg-body-tertiary g-col-3">
+            <a
+                class="d-flex align-items-center flex-shrink-0 p-3 link-body-emphasis text-decoration-none border-bottom">
+                <div id="titulo-lista" class="d-flex justify-content-around" style="gap: 20px;"></div>
             </a>
             <div id="lista-projetos" class="list-group list-group-flush border-bottom scrollarea"></div>
         </div>

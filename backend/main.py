@@ -105,7 +105,13 @@ async def remover_projeto(projeto_delete: ProjetoDelete, session: Session = Depe
     session.delete(projeto)
     session.commit()
 
-    return {"deletado": projeto.nome}
+    try:
+        projetos = session.query(Projeto).all()
+        return {"deletado": projeto.nome,
+                "projetos ": projetos}
+    except:
+        return {"deletado": projeto.nome,
+                "projetos ": "não foi possível recuperar os projetos"}
 
 @app.delete('/projetos')
 async def remover_multiplos_projetos(projeto_delete: ProjetosDelete, session: Session = Depends(get_session)):
@@ -125,7 +131,19 @@ async def remover_multiplos_projetos(projeto_delete: ProjetosDelete, session: Se
         except HTTPException:
             projetos_nao_encontrados.append(id)
 
-    return {"projetos deletados": projetos_deletados,
-            "projetos não encontrados": projetos_nao_encontrados if projetos_nao_encontrados else []}
+    try:
+        projetos = session.query(Projeto).all()
 
+        return {
+            "projetos deletados": projetos_deletados,
+            "projetos não encontrados": projetos_nao_encontrados if projetos_nao_encontrados else [],
+            "projetos": projetos
+            }
     
+    except:
+
+         return {
+             "projetos deletados": projetos_deletados,
+             "projetos não encontrados": projetos_nao_encontrados if projetos_nao_encontrados else [],
+             "projetos ": "não foi possível recuperar os projetos"
+             }

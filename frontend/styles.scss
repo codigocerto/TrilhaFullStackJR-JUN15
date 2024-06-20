@@ -1,0 +1,60 @@
+$codigo-certo-color-1: #000000;
+$codigo-certo-color-2: #e53939;
+$codigo-certo-color-3: #ffffff;
+
+$primary: $codigo-certo-color-2;
+$nav-link-color: $codigo-certo-color-3;
+$nav-link-hover-color: $codigo-certo-color-3;
+
+
+@import "../node_modules/bootstrap/scss/bootstrap";
+
+
+.btn-primary, .btn-primary:hover{
+    color: $codigo-certo-color-3;
+}
+
+#area {
+    display: flex;
+    height: calc(100vh - 42px);
+}
+
+#view {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+#lista-projetos {
+    max-height: 100vh;
+    overflow-y: auto;
+}
+
+#descricao {
+    max-width: 75%;
+    white-space: inherit;
+}
+
+#horario {
+    display: flex;
+    gap: 10px;
+}
+
+.check-remove {
+    display: flex;
+}
+
+#sidebar{
+    width: 380px;
+}
+
+@media only screen and (max-width: 600px) {
+    #area {
+        display: block;
+        justify-items: stretch;
+    }
+    #sidebar{
+        height: 45vh;
+        width: 100vw;
+    }
+  }

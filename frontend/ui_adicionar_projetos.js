@@ -29,7 +29,7 @@ const adicionarForm = $(`
         <input type="date" class="form-control" id="floatingPrazo">
         <label for="floatingPrazo">Prazo do Projeto</label>
     </div>
-    <button id="botao-submit"type="submit" class="btn btn-primary mt-4">Adicionar</button>
+    <button id="botao-submit" type="submit" class="btn btn-primary mt-4">Adicionar Projeto</button>
     </form>`)
 
 
@@ -63,11 +63,10 @@ export async function showAdicionarProjeto() {
     const inputCheckPrazo = adicionarForm.find("#flexCheckPrazo");
     const inputPrazo = adicionarForm.find("#floatingPrazo");
     
-    
+    titulo.empty();
     listaProjetos.empty();
     projetoView.empty();
 
-    titulo.text("   Adicionar Projeto");
     
     projetoViewBoxText.append(adicionarForm);
     projetoViewBox.append(projetoViewBoxText);
@@ -76,12 +75,14 @@ export async function showAdicionarProjeto() {
 
     
     const icon = $(`
-    <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-journal-plus" viewBox="0 0 16 16">
+    <svg xmlns="http://www.w3.org/2000/svg" width="35" height="35" fill="currentColor" class="bi bi-journal-plus" viewBox="0 0 16 16">
         <path fill-rule="evenodd" d="M8 5.5a.5.5 0 0 1 .5.5v1.5H10a.5.5 0 0 1 0 1H8.5V10a.5.5 0 0 1-1 0V8.5H6a.5.5 0 0 1 0-1h1.5V6a.5.5 0 0 1 .5-.5"/>
         <path d="M3 0h10a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2v-1h1v1a1 1 0 0 0 1 1h10a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H3a1 1 0 0 0-1 1v1H1V2a2 2 0 0 1 2-2"/>
         <path d="M1 5v-.5a.5.5 0 0 1 1 0V5h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1zm0 3v-.5a.5.5 0 0 1 1 0V8h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1zm0 3v-.5a.5.5 0 0 1 1 0v.5h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1z"/>
     </svg>`)
-    titulo.prepend(icon);
+    
+    titulo.append(icon);
+    titulo.append("<h3>Adicionar Projetos</h3>");
 
     criarListaProjetos(projetos);
 

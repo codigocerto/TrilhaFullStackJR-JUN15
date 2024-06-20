@@ -23,14 +23,13 @@ function criarPaginaProjeto(id, nome, descricao, prazo, criacao) {
     const datePrazo = new Date(prazo  + 'Z');
 
     const labelCriacao = `<p>Criado: ${dateCriacao.toLocaleDateString('pt-BR')} </p>`;
-    // const labelPrazo = prazo ? `<p>Prazo: ${datePrazo.toLocaleDateString('pt-BR')}</p>` : "";
 
     const adicionarForm = $(`
         <form id="add-projeto-form">
         <span id="horario" class="text-muted">${labelCriacao}</span>
         <h1 class="text-body-emphasis mb-5">Editar ${nome}</h1>
         <div class="form-floating mb-3">
-            <input required type="text" class="form-control" id="floatingNomeProjeto" placeholder="Nome do Projeto">
+            <input type="text" class="form-control" id="floatingNomeProjeto" placeholder="Nome do Projeto">
             <label for="floatingNomeProjeto">Nome do Projeto</label>
         </div>
         <div class="form-floating mb-3">
@@ -47,7 +46,7 @@ function criarPaginaProjeto(id, nome, descricao, prazo, criacao) {
             <input type="date" class="form-control" id="floatingPrazo">
             <label for="floatingPrazo">Prazo do Projeto</label>
         </div>
-        <button id="botao-submit"type="submit" class="btn btn-primary mt-4">Confirmar</button>
+        <button id="botao-submit"type="submit" class="btn btn-primary mt-4">Confirmar Edição</button>
         </form>`)
 
         const inputNomeProjeto = adicionarForm.find("#floatingNomeProjeto");
@@ -89,7 +88,7 @@ function criarPaginaProjeto(id, nome, descricao, prazo, criacao) {
             // try{prazoEdit = prazoEdit.toISOString().replace(".000Z", "")  + "T23:59:59";}
             // catch{prazoEdit = null;}
 
-            let nomeHasChanged = nomeEdit!== nome;
+            let nomeHasChanged = nomeEdit !== nome && nomeEdit !== "";
             let descricaoHasChanged = descricaoEdit !== descricao;
             let prazoHasChanged = prazo && prazoEdit ? prazoEdit.toISOString().slice(0, 10) !== prazo.slice(0, 10) : prazoEdit !== prazo;
    
@@ -104,6 +103,17 @@ function criarPaginaProjeto(id, nome, descricao, prazo, criacao) {
                 nome: nomeHasChanged ? nomeEdit : "", 
                 descricao: descricaoHasChanged ? descricaoEdit : "",
                 prazo: prazoHasChanged ? prazoEdit : prazo
+            }
+            
+            
+            if(!confirm(
+                (Number(nomeHasChanged) + Number(descricaoHasChanged) + Number(descricaoHasChanged) > 1 ? "Alterações:\n" : "Alteração:\n") + 
+                (nomeHasChanged ? "Nome\n" : "") +
+                (descricaoHasChanged ? "Descrição\n" : "") + 
+                (prazoHasChanged ? "Prazo\n" : "") + 
+                "Deseja continuar?")
+            ){
+                return;
             }
             
             editarProjeto(novoProjeto);
@@ -129,6 +139,7 @@ function criarPaginaProjeto(id, nome, descricao, prazo, criacao) {
 
 function criarItemLista(id, nome, descricao, prazo, criacao) {
 
+    
     const itemLista = $(`<a id="${id}" role="button" class="list-group-item list-group-item-action py-3 lh-sm" aria-current="true">
                             <div class="d-flex w-100 align-items-center justify-content-between">
                                 <strong class="mb-1 px-2">${nome}</strong>
@@ -163,7 +174,8 @@ function criarListaProjetos(projetos){
 
 export async function showEditarProjeto() {
     let projetos = await getProjetos();
-    listaProjetos.empty();
+    // listaProjetos.empty();
+    titulo.empty();
     
     projetoViewBoxText.empty()
     projetoViewBox.empty()
@@ -177,15 +189,17 @@ export async function showEditarProjeto() {
         </div>`));
     
     
-    titulo.text("   Editar Projetos");
     const icon = $(`
-    <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-journal-text" viewBox="0 0 16 16">
+    <svg xmlns="http://www.w3.org/2000/svg" width="35" height="35" fill="currentColor" class="bi bi-journal-text" viewBox="0 0 16 16">
         <path d="M5 10.5a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 0 1h-2a.5.5 0 0 1-.5-.5m0-2a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5m0-2a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5m0-2a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5"/>
         <path d="M3 0h10a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2v-1h1v1a1 1 0 0 0 1 1h10a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H3a1 1 0 0 0-1 1v1H1V2a2 2 0 0 1 2-2"/>
         <path d="M1 5v-.5a.5.5 0 0 1 1 0V5h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1zm0 3v-.5a.5.5 0 0 1 1 0V8h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1zm0 3v-.5a.5.5 0 0 1 1 0v.5h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1z"/>
     </svg>
-`)
-    titulo.prepend(icon);
+    `)
+    
+    titulo.append(icon);
+    titulo.append("<h3>Editar Projetos</h3>");
+
 
     criarListaProjetos(projetos);
 
