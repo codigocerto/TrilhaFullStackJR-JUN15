@@ -28,7 +28,7 @@ export async function addProjeto(dadosProjeto){
     };
 
     try{
-        const response = await fetch(`${URL}/projeto`, options);
+        const response = await fetch(`${URL}/projeto/criar`, options);
         
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
@@ -54,7 +54,7 @@ export async function editarProjeto(dadosProjeto){
     };
 
     try{
-        const response = await fetch(`${URL}/projeto`, options);
+        const response = await fetch(`${URL}/projeto/editar`, options);
         
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
@@ -80,7 +80,7 @@ export async function removerProjeto(ids){
     };
 
     try{
-        const response = await fetch(`${URL}/projetos`, options);
+        const response = await fetch(`${URL}/projetos/deletar`, options);
         
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);

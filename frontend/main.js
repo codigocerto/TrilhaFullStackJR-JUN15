@@ -1,32 +1,7 @@
-const darkThemeButton = $("#flexSwitchCheckDarkTheme");
-
-const themePreference = localStorage.getItem('themePreference');
-if(themePreference === 'dark'){
+const isDarkTheme = window.matchMedia("(prefers-color-scheme: dark)").matches;
+if(isDarkTheme){
     $("html").attr("data-bs-theme", "dark");
-    darkThemeButton.prop('checked', true);
 }
-else{
-    const isDarkTheme = window.matchMedia("(prefers-color-scheme: dark)").matches;
-    if(isDarkTheme){
-        $("html").attr("data-bs-theme", "dark");
-        darkThemeButton.prop('checked', false);
-    }
-}
-
-darkThemeButton.on("change", event => {
-    const elemento = event.target;
-    if(elemento.checked){
-        $("html").attr("data-bs-theme", "dark");
-        localStorage.setItem('themePreference', 'dark');
-    }
-    else{
-        $("html").attr("data-bs-theme", "light");
-        localStorage.setItem('themePreference', 'light');
-    }
-});
-
-
-
 
 
 import { showProjeto } from "./ui_pagina_projetos.js";

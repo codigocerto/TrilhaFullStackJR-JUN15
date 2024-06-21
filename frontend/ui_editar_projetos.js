@@ -106,24 +106,18 @@ function criarPaginaProjeto(id, nome, descricao, prazo, criacao) {
             }
             
             
-            if(!confirm(
-                (Number(nomeHasChanged) + Number(descricaoHasChanged) + Number(descricaoHasChanged) > 1 ? "Alterações:\n" : "Alteração:\n") + 
-                (nomeHasChanged ? "Nome\n" : "") +
-                (descricaoHasChanged ? "Descrição\n" : "") + 
-                (prazoHasChanged ? "Prazo\n" : "") + 
-                "Deseja continuar?")
+            if(!confirm(`${nome} será alterado. Deseja continuar?`)
             ){
                 return;
             }
             
-            editarProjeto(novoProjeto);
+            const atualizacaoProjetos = await editarProjeto(novoProjeto);
     
-            const projetos = await getProjetos();
-            if(!projetos){
+            if(!atualizacaoProjetos){
                 alert("Erro na atualização do Projeto!")
                 return;
             }
-            criarListaProjetos(projetos)
+            criarListaProjetos(atualizacaoProjetos["projetos"]);
             adicionarForm.find("h1").text(`Editar ${nomeEdit || nome}`);
             alert(`${nomeEdit || nome} atualizado com sucesso!`);
     
@@ -174,7 +168,6 @@ function criarListaProjetos(projetos){
 
 export async function showEditarProjeto() {
     let projetos = await getProjetos();
-    // listaProjetos.empty();
     titulo.empty();
     
     projetoViewBoxText.empty()

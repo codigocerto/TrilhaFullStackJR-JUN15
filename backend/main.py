@@ -1,15 +1,15 @@
 from datetime import datetime, timezone
 from fastapi import Depends, FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
-from backend.models import MultProjetosInput, ProjetoDelete, ProjetoInput, ProjetoUpdate, ProjetosDelete
-from backend.schema import Projeto, get_session, Session
+from models import MultProjetosInput, ProjetoDelete, ProjetoInput, ProjetoUpdate, ProjetosDelete
+from schema import Projeto, get_session, Session
 
 app = FastAPI(title="Gerenciamento de Projetos")
 
 app.add_middleware(
     CORSMiddleware,
-    # allow_origins=["*"],
-    allow_origins=["http://127.0.0.1:2129", "http://localhost:2129"],
+    allow_origins=["*"],
+    # allow_origins=["http://127.0.0.1:2129", "http://localhost:2129"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -28,7 +28,7 @@ async def get_projetos(session: Session = Depends(get_session)):
     
     raise HTTPException(status_code=404, detail='Não há projetos cadastrados')
 
-@app.post('/projeto')
+@app.post('/projeto/criar')
 async def registrar_projeto(projeto_input: ProjetoInput, session: Session = Depends(get_session)):
     
     if(not projeto_input.nome.strip()):
@@ -44,7 +44,7 @@ async def registrar_projeto(projeto_input: ProjetoInput, session: Session = Depe
             "nome": projeto.nome,
             "descricao": projeto.descricao}
 
-@app.post('/projetos')
+@app.post('/projetos/criar')
 async def registrar_multiplos_projetos(projetos_input: MultProjetosInput, session: Session = Depends(get_session)):
     
     projetos_inseridos = []
@@ -74,7 +74,7 @@ async def registrar_multiplos_projetos(projetos_input: MultProjetosInput, sessio
         "projetos com erro": projetos_com_erro if projetos_com_erro else 0
     }
 
-@app.put('/projeto')
+@app.put('/projeto/editar')
 async def alterar_projeto(projeto_update: ProjetoUpdate, session: Session = Depends(get_session)):
     projeto = session.query(Projeto).filter(projeto_update.id == Projeto.id).first()
     
@@ -90,13 +90,29 @@ async def alterar_projeto(projeto_update: ProjetoUpdate, session: Session = Depe
     
     session.add(projeto)
     session.commit()
-    return {"id": projeto.id,
-        "nome": projeto.nome,
-        "descricao": projeto.descricao}
+    
+    try:
+        projetos = session.query(Projeto).all()
+
+        return {
+            "projeto atualizado":{
+                "id": projeto.id,
+                "nome": projeto.nome,
+                "descricao": projeto.descricao
+                },
+            "projetos": projetos
+            }
+    
+    except:
+        return{
+            "id": projeto.id,
+            "nome": projeto.nome,
+            "descricao": projeto.descricao
+            }
 
     
 
-@app.delete('/projeto')
+@app.delete('/projeto/deletar')
 async def remover_projeto(projeto_delete: ProjetoDelete, session: Session = Depends(get_session)):
     projeto = session.query(Projeto).filter(projeto_delete.id == Projeto.id).first()
     if not projeto:
@@ -113,7 +129,7 @@ async def remover_projeto(projeto_delete: ProjetoDelete, session: Session = Depe
         return {"deletado": projeto.nome,
                 "projetos ": "não foi possível recuperar os projetos"}
 
-@app.delete('/projetos')
+@app.delete('/projetos/deletar')
 async def remover_multiplos_projetos(projeto_delete: ProjetosDelete, session: Session = Depends(get_session)):
     projetos_deletados = []
     projetos_nao_encontrados = []
@@ -147,3 +163,8 @@ async def remover_multiplos_projetos(projeto_delete: ProjetosDelete, session: Se
              "projetos não encontrados": projetos_nao_encontrados if projetos_nao_encontrados else [],
              "projetos ": "não foi possível recuperar os projetos"
              }
+
+
+if __name__ == '__main__':
+   import uvicorn
+   uvicorn.run(app, port=2130)

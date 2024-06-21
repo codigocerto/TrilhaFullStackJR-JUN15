@@ -18,13 +18,11 @@ function criarPaginaProjeto(nome, descricao, prazo, criacao) {
         `<div class="container my-5">
             <div class="p-5 text-center bg-body-tertiary rounded-3">
                 <span id="horario" class="text-muted">${labelPrazo}${labelCriacao}</span>
-                <h1 class="text-body-emphasis">${nome}</h1>
+                <h1 class="text-body-emphasis mb-4">${nome}</h1>
                 <p class="lead">${descricao}</p>
             </div>
         </div>`);
 
-   
-        console.log("oi")
     projetoView.append(projetoViewBox);
 
 }

@@ -2,7 +2,7 @@ from datetime import datetime, timezone
 from sqlalchemy import Column, DateTime, Integer, String, Text, create_engine
 from sqlalchemy.orm import Session, declarative_base
 
-engine = create_engine('sqlite:///./backend/projetos_database.db')
+engine = create_engine('sqlite:///projetos_database.db')
 
 def get_session():
     session = Session(bind=engine)

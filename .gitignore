@@ -8,3 +8,4 @@ frontend/styles.css
 frontend/styles-raw.css
 package-lock.json
 package.json
+venv/
