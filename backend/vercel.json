@@ -9,31 +9,31 @@
     "routes": [
       {
         "src": "/",
-        "dest": "app.py"
+        "dest": "main.py"
       },
       {
         "src": "/projetos",
-        "dest": "app.py"
+        "dest": "main.py"
       },
       {
         "src": "/projeto/criar",
-        "dest": "app.py"
+        "dest": "main.py"
       },
       {
         "src": "/projetos/criar",
-        "dest": "app.py"
+        "dest": "main.py"
       },
       {
         "src": "/projeto/editar",
-        "dest": "app.py"
+        "dest": "main.py"
       },
       {
         "src": "/projeto/deletar",
-        "dest": "app.py"
+        "dest": "main.py"
       },
       {
         "src": "/projetos/deletar",
-        "dest": "app.py"
+        "dest": "main.py"
       }
 
     ]
