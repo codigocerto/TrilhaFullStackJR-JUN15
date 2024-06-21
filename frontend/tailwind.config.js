@@ -8,7 +8,7 @@ export default {
     extend: {
       colors: {
         'preto-trila': '#000000',
-        'vermelho-trilha': '#3D5C5A',
+        'vermelho-trilha': '#e53939',
         'branco-trilha': '#ffffff'
       },
     },
