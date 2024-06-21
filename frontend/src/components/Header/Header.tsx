@@ -27,7 +27,7 @@ export function Header() {
       <nav className="flex-grow hidden md:flex space-x-8">
         <a
           href="/home"
-          className="text-black font-bold no-underline hover:border-vermelho-trilha"
+          className="text-black font-bold no-underline "
         >
           Meus projetos
         </a>
@@ -72,7 +72,7 @@ export function Header() {
         {anchorElUser && (
           <div className="absolute top-28 bg-white shadow-lg rounded-md">
             <div className="flex flex-col">
-              <a href="/" className="p-2 flex items-center hover:bg-gray-200">
+              <a href="/profile" className="p-2 flex items-center hover:bg-gray-200">
                 Profile
               </a>
               <a href="/" className="p-2 flex items-center hover:bg-gray-200">
