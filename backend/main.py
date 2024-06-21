@@ -1,3 +1,4 @@
+import os
 from datetime import datetime, timezone
 from fastapi import Depends, FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
@@ -6,10 +7,12 @@ from schema import Projeto, get_session, Session
 
 app = FastAPI(title="Gerenciamento de Projetos")
 
+allowed_origins = os.getenv("ALLOWED_ORIGINS", "").split(",")
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
-    # allow_origins=["http://127.0.0.1:2129", "http://localhost:2129"],
+    # allow_origins=["*"],
+    allow_origins=allowed_origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
