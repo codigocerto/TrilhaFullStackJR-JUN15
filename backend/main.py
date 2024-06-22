@@ -187,8 +187,3 @@ async def remover_multiplos_projetos(projeto_delete: ProjetosDelete, session: Se
              "projetos não encontrados": projetos_nao_encontrados if projetos_nao_encontrados else [],
              "projetos ": []
              }
-
-
-if __name__ == '__main__':
-   import uvicorn
-   uvicorn.run(app, port=2130)

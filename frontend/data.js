@@ -5,7 +5,6 @@ function loadingSpinner(){
 }
 
 const URL = "http://localhost:2130";
-// const URL = "https://codigo-certo-trilha-full-stack-backend.vercel.app";
 
 export async function getProjetos(){
     loadingSpinner();
