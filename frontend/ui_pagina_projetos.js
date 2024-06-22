@@ -3,6 +3,11 @@ import { getListaProjetos } from "./data.js";
 const projetoView = $("#view");
 const listaProjetos = $("#lista-projetos");
 const titulo = $("#titulo-lista");
+const anchor = $("#anchor");
+
+anchor.on("click", () => {
+    listaProjetos[0].scrollTop = 0;
+})
 
 
 function criarPaginaProjeto(nome, descricao, prazo, criacao) {

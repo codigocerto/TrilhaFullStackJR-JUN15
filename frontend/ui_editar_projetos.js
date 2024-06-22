@@ -3,6 +3,11 @@ import { getListaProjetos, editarProjeto, setProjetos } from "./data.js";
 const listaProjetos = $("#lista-projetos")
 const projetoView = $("#view");
 const titulo = $("#titulo-lista");
+const anchor = $("#anchor");
+
+anchor.on("click", () => {
+    listaProjetos[0].scrollTop = 0;
+})
 
    
 const projetoViewBox = $(`<div class="container my-5"></div>`);

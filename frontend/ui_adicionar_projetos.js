@@ -4,6 +4,11 @@ import { tempoRestante } from "./ui_pagina_projetos.js";
 const projetoView = $("#view");
 const listaProjetos = $("#lista-projetos");
 const titulo = $("#titulo-lista");
+const anchor = $("#anchor");
+
+anchor.on("click", () => {
+    listaProjetos[0].scrollTop = 0;
+})
 
 const projetoViewBox = $(`<div class="container my-5"></div>`);
 const projetoViewBoxText = $(`<div id="view-box-text" class="p-5 text-center bg-body-tertiary rounded-3"></div>`);

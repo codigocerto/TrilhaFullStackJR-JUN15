@@ -3,8 +3,7 @@ import os
 from sqlalchemy import Column, DateTime, Integer, String, Text, create_engine
 from sqlalchemy.orm import Session, declarative_base
 
-# URL = "sqlite:///backend/projetos_database.db"
-URL = allowed_origins = os.getenv("DATABASE_KEY", "")
+URL = os.getenv("DATABASE_KEY", "")
 
 engine = create_engine(URL)
 
