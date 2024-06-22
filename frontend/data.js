@@ -5,6 +5,7 @@ function loadingSpinner(){
 }
 
 const URL = "https://trilhafullstackjr-jun15-production-2f5f.up.railway.app";
+// const URL = "http://127.0.0.1:2130";
 
 export async function getProjetos(){
     loadingSpinner();
