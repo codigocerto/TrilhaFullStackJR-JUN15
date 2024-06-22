@@ -1,7 +1,14 @@
+const loadingIcon = $(".spinner-border");
+
+function loadingSpinner(){
+    loadingIcon.toggle();
+}
+
 const URL = "http://localhost:2130";
+// const URL = "https://codigo-certo-trilha-full-stack-backend.vercel.app";
 
 export async function getProjetos(){
-
+    loadingSpinner();
     try{
         const response = await fetch (`${URL}/projetos`);
         if(!response.ok){
@@ -9,16 +16,19 @@ export async function getProjetos(){
         }
         const data = await response.json();
         
+        loadingSpinner();
         return data
 
     }
     catch(error){
         console.error(error);
+        loadingSpinner();
         return null;
     }
 }
 
 export async function addProjeto(dadosProjeto){
+    loadingSpinner();
     const options = {
         method: 'POST',
         headers: {
@@ -35,16 +45,19 @@ export async function addProjeto(dadosProjeto){
         }
         
         const data = await response.json();
+        loadingSpinner()
         return data;
     }
     catch(error){
         alert("O projeto nao pôde ser inserido");
         console.error(error);
     }
+    loadingSpinner()
 
 }
 
 export async function editarProjeto(dadosProjeto){
+    loadingSpinner()
     const options = {
         method: 'PUT',
         headers: {
@@ -61,16 +74,18 @@ export async function editarProjeto(dadosProjeto){
         }
         
         const data = await response.json();
+        loadingSpinner()
         return data;
     }
     catch(error){
         alert("O projeto nao pôde editado");
         console.error(error);
     }
-
+    loadingSpinner()
 }
 
 export async function removerProjeto(ids){
+    loadingSpinner()
     const options = {
         method: 'DELETE',
         headers: {
@@ -91,11 +106,23 @@ export async function removerProjeto(ids){
         if(data["projetos não encontrados"].length > 0){
             throw new Error(`O seguintes projetos nao puderam ser removidos ${data["projetos não encontrados"].join(" ")}`);
         }
+        loadingSpinner()
         return data;
     }
     catch(error){
         alert("O projeto nao pôde ser removido");
         console.error(error);
     }
+    loadingSpinner()
 
+}
+
+let projetos = await getProjetos();
+
+export function getListaProjetos(){
+    return projetos;
+}
+
+export function setProjetos(atualizacaoProjetos){
+    projetos = atualizacaoProjetos;
 }

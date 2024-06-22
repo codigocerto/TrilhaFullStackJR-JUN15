@@ -1,18 +1,20 @@
-const isDarkTheme = window.matchMedia("(prefers-color-scheme: dark)").matches;
-if(isDarkTheme){
-    $("html").attr("data-bs-theme", "dark");
-}
+// const isDarkTheme = window.matchMedia("(prefers-color-scheme: dark)").matches;
+// if(isDarkTheme){
+//     $("html").attr("data-bs-theme", "dark");
+// }
 
-
+// import { getListaProjetos } from "./data.js";
 import { showProjeto } from "./ui_pagina_projetos.js";
 import { showRemoverProjetos } from "./ui_remover_projetos.js";
 import { showAdicionarProjeto } from "./ui_adicionar_projetos.js";
 import { showEditarProjeto } from "./ui_editar_projetos.js";
 
+
 const botaoProjetos = $("#projetos");
 const botaoAdicionar = $("#adicionar");
 const botaoEditar = $("#editar");
 const botaoRemover = $("#remover");
+
 
 
 botaoProjetos.on("click", () => {

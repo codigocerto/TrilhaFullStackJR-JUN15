@@ -1,5 +1,4 @@
-import { removerProjeto, getProjetos, editarProjeto } from "./data.js";
-import { tempoRestante } from "./ui_pagina_projetos.js";
+import { getListaProjetos, editarProjeto, setProjetos } from "./data.js";
 
 const listaProjetos = $("#lista-projetos")
 const projetoView = $("#view");
@@ -90,6 +89,7 @@ function criarPaginaProjeto(id, nome, descricao, prazo, criacao) {
 
             let nomeHasChanged = nomeEdit !== nome && nomeEdit !== "";
             let descricaoHasChanged = descricaoEdit !== descricao;
+            console.log(prazoEdit, prazo);
             let prazoHasChanged = prazo && prazoEdit ? prazoEdit.toISOString().slice(0, 10) !== prazo.slice(0, 10) : prazoEdit !== prazo;
    
 
@@ -117,7 +117,9 @@ function criarPaginaProjeto(id, nome, descricao, prazo, criacao) {
                 alert("Erro na atualização do Projeto!")
                 return;
             }
+            
             criarListaProjetos(atualizacaoProjetos["projetos"]);
+            setProjetos(atualizacaoProjetos["projetos"]);
             adicionarForm.find("h1").text(`Editar ${nomeEdit || nome}`);
             alert(`${nomeEdit || nome} atualizado com sucesso!`);
     
@@ -166,8 +168,8 @@ function criarListaProjetos(projetos){
 
 }   
 
-export async function showEditarProjeto() {
-    let projetos = await getProjetos();
+export function showEditarProjeto() {
+    let projetos = getListaProjetos();
     titulo.empty();
     
     projetoViewBoxText.empty()
@@ -191,7 +193,7 @@ export async function showEditarProjeto() {
     `)
     
     titulo.append(icon);
-    titulo.append("<h3>Editar Projetos</h3>");
+    titulo.append(`<h3>Editar Projetos<h3>`);
 
 
     criarListaProjetos(projetos);

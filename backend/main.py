@@ -5,6 +5,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from models import MultProjetosInput, ProjetoDelete, ProjetoInput, ProjetoUpdate, ProjetosDelete
 from schema import Projeto, get_session, Session
 
+
 app = FastAPI(title="Gerenciamento de Projetos")
 
 allowed_origins = os.getenv("ALLOWED_ORIGINS", "").split(",")
@@ -29,11 +30,10 @@ async def get_projetos(session: Session = Depends(get_session)):
     if projetos: 
         return projetos
     
-    raise HTTPException(status_code=404, detail='Não há projetos cadastrados')
+    return []
 
 @app.post('/projeto/criar')
 async def registrar_projeto(projeto_input: ProjetoInput, session: Session = Depends(get_session)):
-    
     if(not projeto_input.nome.strip()):
        raise HTTPException(status_code=422, detail='O nome do projeto não pode ser vazio')
     
@@ -43,9 +43,21 @@ async def registrar_projeto(projeto_input: ProjetoInput, session: Session = Depe
     projeto = Projeto(nome=projeto_input.nome.strip(), descricao=projeto_input.descricao, prazo=projeto_input.prazo)
     session.add(projeto)
     session.commit()
-    return {"id": projeto.id,
-            "nome": projeto.nome,
-            "descricao": projeto.descricao}
+    
+    projetos = session.query(Projeto).all()
+
+    try:
+        projetos = session.query(Projeto).all()
+        return {
+            "projeto inserido": projeto,
+            "projetos": projetos
+            }
+    except:
+        
+        return {
+        "projeto inserido": projeto,
+        "projetos": []
+    }
 
 @app.post('/projetos/criar')
 async def registrar_multiplos_projetos(projetos_input: MultProjetosInput, session: Session = Depends(get_session)):
@@ -72,9 +84,19 @@ async def registrar_multiplos_projetos(projetos_input: MultProjetosInput, sessio
                 "erro": str(erro.detail)
             })
 
-    return {
+    try:
+        projetos = session.query(Projeto).all()
+        return {
+            "projetos inseridos": projetos_inseridos,
+            "projetos com erro": projetos_com_erro if projetos_com_erro else 0,
+            "projetos": projetos
+            }
+    except:
+        
+        return {
         "projetos inseridos": projetos_inseridos,
-        "projetos com erro": projetos_com_erro if projetos_com_erro else 0
+        "projetos com erro": projetos_com_erro if projetos_com_erro else 0,
+        "projetos": []
     }
 
 @app.put('/projeto/editar')
@@ -164,7 +186,7 @@ async def remover_multiplos_projetos(projeto_delete: ProjetosDelete, session: Se
          return {
              "projetos deletados": projetos_deletados,
              "projetos não encontrados": projetos_nao_encontrados if projetos_nao_encontrados else [],
-             "projetos ": "não foi possível recuperar os projetos"
+             "projetos ": []
              }
 
 

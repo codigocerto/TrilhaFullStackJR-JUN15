@@ -1,6 +1,4 @@
-backend/__pycache__/main.cpython-312.pyc
-backend/__pycache__/models.cpython-312.pyc
-backend/__pycache__/schema.cpython-312.pyc
+backend/__pycache__/
 node_modules/
 frontend/styles.css.map
 frontend/styles.css
@@ -8,3 +6,4 @@ frontend/styles-raw.css
 package-lock.json
 package.json
 venv/
+projetos_database.db

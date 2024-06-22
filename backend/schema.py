@@ -1,8 +1,12 @@
 from datetime import datetime, timezone
+import os
 from sqlalchemy import Column, DateTime, Integer, String, Text, create_engine
 from sqlalchemy.orm import Session, declarative_base
 
-engine = create_engine('sqlite:///projetos_database.db')
+# URL = "sqlite:///backend/projetos_database.db"
+URL = allowed_origins = os.getenv("DATABASE_KEY", "")
+
+engine = create_engine(URL)
 
 def get_session():
     session = Session(bind=engine)

@@ -1,4 +1,4 @@
-import { getProjetos, addProjeto } from "./data.js";
+import { addProjeto, getListaProjetos, setProjetos } from "./data.js";
 import { tempoRestante } from "./ui_pagina_projetos.js";
 
 const projetoView = $("#view");
@@ -55,9 +55,9 @@ function criarListaProjetos(projetos){
     });
 }
 
-export async function showAdicionarProjeto() {
+export function showAdicionarProjeto() {
     
-    let projetos = await getProjetos();
+    let projetos = getListaProjetos();
     const inputNomeProjeto = adicionarForm.find("#floatingNomeProjeto");
     const inputDescricaoProjeto = adicionarForm.find("#floatingDescricao");
     const inputCheckPrazo = adicionarForm.find("#flexCheckPrazo");
@@ -82,7 +82,7 @@ export async function showAdicionarProjeto() {
     </svg>`)
     
     titulo.append(icon);
-    titulo.append("<h3>Adicionar Projetos</h3>");
+    titulo.append(`<h3>Adicionar Projetos<h3>`);
 
     criarListaProjetos(projetos);
 
@@ -107,10 +107,12 @@ export async function showAdicionarProjeto() {
     
         const novoProjeto = {nome, descricao, prazo}
         
-        addProjeto(novoProjeto);
+        const atualizacaoProjetos = await addProjeto(novoProjeto);
 
-        projetos.push(novoProjeto);
-        criarListaProjetos(projetos)
+        criarListaProjetos(atualizacaoProjetos["projetos"]);
+        setProjetos(atualizacaoProjetos["projetos"])
+        projetos = atualizacaoProjetos["projetos"];
+
 
         listaProjetos[0].scrollTop = listaProjetos[0].scrollHeight;
 
