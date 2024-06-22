@@ -94,7 +94,6 @@ function criarPaginaProjeto(id, nome, descricao, prazo, criacao) {
 
             let nomeHasChanged = nomeEdit !== nome && nomeEdit !== "";
             let descricaoHasChanged = descricaoEdit !== descricao;
-            console.log(prazoEdit, prazo);
             let prazoHasChanged = prazo && prazoEdit ? prazoEdit.toISOString().slice(0, 10) !== prazo.slice(0, 10) : prazoEdit !== prazo;
    
 

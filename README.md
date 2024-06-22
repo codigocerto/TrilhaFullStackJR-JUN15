@@ -1,92 +1,65 @@
-![Código Certo Coders](https://utfs.io/f/3b2340e8-5523-4aca-a549-0688fd07450e-j4edu.jfif)
+# Gerenciador de Projetos
 
-# 📚 Trilha Inicial FullStack Jr
-Este projeto tem como objetivo desenvolver uma aplicação web completa para gerenciamento de projetos, juntamente com um servidor back-end. A aplicação web permitirá aos usuários listar, cadastrar, editar e excluir projetos, cada um contendo um título e uma descrição.
+https://jpfsgs-projetos.netlify.app/
 
-## FrontEnd:
-- **HTML/CSS/JavaScript puro:** Utilize HTML para estruturar a página, CSS para estilização e JavaScript puro (ou jQuery, se preferir) para manipulação de DOM e interações com o servidor.
-- Implemente uma página para listar os projetos cadastrados.
-- Desenvolva formulários para adicionar e editar projetos.
-- Inclua botões para editar e deletar projetos, com confirmação antes de executar a ação.
+## Descrição
+Aplicação Web para criar, editar, remover e gerenciar projetos, com opção de incluir prazo e descrição.
 
-## BackEnd:
-- **Node.js (Express), Python (Flask/Django), Java (Spring Boot), etc.:** Escolha uma linguagem e framework de sua preferência para criar um servidor que irá fornecer APIs RESTful para operações CRUD.
-- Configure rotas para manipular os projetos, utilizando métodos HTTP adequados (GET, POST, PUT, DELETE).
-- Utilize um banco de dados (SQL ou NoSQL) para armazenar os projetos.
+![Lista de Projetos](screenshots\tela_visualizar.jpeg)
+|Desktop|Mobile|
+| - | - |
+| ![Adicionar Projeto](screenshots\tela_adicionar.jpeg 'title A') | ![Lista de Projetos Mobile](screenshots\tela_selecione_mobile.jpeg 'title B') |
 
-#### Tecnologias Recomendadas:
-- **Front-end:** HTML, CSS, JavaScript, React.js
-- **Back-end:** Node.js, Express.js
-- **Banco de Dados:** SQLite (com Sequelize ou outro ORM)
-- **Autenticação:** JWT (JSON Web Tokens)
-- **Deploy:** Heroku, Vercel, ou outro serviço de hospedagem gratuito
+|||
+| - | - |
+| ![Editar Projetos](screenshots\tela_editar.jpeg 'title A') | ![git hooks](screenshots\tela_remover_mobile.jpeg 'title B') |
 
-Primordial: Utilizar as cores da paleta da **Codigo Certo Coders:**
-![Codigo Certo Coders Cores](https://github.com/codigocerto/TrilhaFrontEndJR-JUN15/assets/170693068/5ced1a97-b2c6-4f54-836c-7b3e115f879f)
-- **#000000** (preto)
-- **#e53939** (vermelho)
-- **#ffffff** (branco)
+### Darkmode
 
-### Detalhes Técnicos: 🔧
-- **Boas Práticas:** Utilizar boas práticas de código limpo, legível e bem documentado.
-- **Git:** Utilizar Git para controle de versão e submeter o projeto através de um repositório público no GitHub.
+|||
+| - | - |
+| ![Lista de Projetos](screenshots\tela_visualizar_dark.jpeg 'title A') | ![Remover Projetos](screenshots\tela_remover_mobile_dark.jpeg 'title B') |
 
-### Apreciações: 🎉
-- **Permitir edição dos conteúdos.**
-- **Utilização máxima possível de HTML semântico.**
-- **Segurança Reforçada.**
-- **Documentação Excepcional.**
-- **Escalabilidade**
 
-### Dicas para Abordar o Projeto 🌟
-- **Crie um Fork desse Repositório.**
-- **Criar do Zero:** É fundamental que o projeto seja desenvolvido completamente do zero, demonstrando suas habilidades e criatividade desde o início.
-- **Atenção aos Detalhes Visuais:** Utilize a paleta de cores e elementos visuais de forma coesa para uma experiência impactante.
-- **Versionamento com Git:** Faça uso eficiente do Git para controlar suas alterações e manter um histórico claro do desenvolvimento.
 
-### Critérios de Avaliação: 📝
-- **Documentação:** Documentação adequada do projeto, incluindo descrição do funcionamento, instruções de instalação e configuração (se aplicável).
-- **Funcionalidade:** A aplicação deve atender à estrutura da página e aos requisitos definidos.
-- **Qualidade do Código:** O código deve ser limpo, bem estruturado e adequadamente documentado.
-- **UI/UX:** A interface do usuário deve ser intuitiva e visualmente atraente.
-- **Uso do Git:** Utilização eficaz do controle de versão com mensagens de commit significativas.
-- **Hospedagem e Deploy** A aplicação front-end e o servidor back-end estão hospedados de forma acessível ao público.
 
-### Não Queremos 🚫
-- Descobrir que o candidato não foi quem realizou o teste.
-- Ver commits grandes sem muita explicação nas mensagens no repositório.
-- Entregas padrão ou cópias de outros projetos. Buscamos originalidade e autenticidade em cada contribuição.
+## Funcionalidades
+- Visualizar todos os projetos
+- Adicionar novo projeto
+- Editar Projeto
+- Remover projetos
 
-### Prazo ⏳
-Os candidatos devem completar a trilha em no máximo em 2 semanas, começando a contar a partir de 15/06.
+## Tecnologias Utilizadas
 
-A conclusão da trilha inicial é um requisito obrigatório para avançar para a trilha 
-final. Caso a trilha inicial não seja concluída dentro do prazo estabelecido, o 
-candidato estará impossibilitado de prosseguir para trilha final.
+### Backend
+- **Linguagem**: Python
+- **Framework**: FastAPI
+- **Banco de Dados**: SQLite
+- **ORM**: SQLAlchemy
+- **Hospedagem**: Railway
 
-**Data máxima para entrega: 29/06**
+### Frontend
+- **Linguagens**: HTML, CSS, JavaScript
+- **Frameworks/Libraries**: Bootstrap, SASS, jQuery
+- **Hospedagem**: Netlify
 
-### Instruções de Entrega: 📬
-Após finalizar o projeto, publique-o em uma URL pública (por exemplo, Vercel, Netlify, GitHub Pages, etc.) e hospede o seu servidor na nuvem. Use serviços que ofereçam uso gratiuto por um período, como a AWS e preencha o [Formulário](https://forms.gle/gZViPMTSDV5nidSu6):  
+## Endpoints da API
 
----
+### Projetos
+- **GET /projetos**
+  - Descrição: Obter todos os projetos
 
-### Desafio da Inovação 🚀
-Achou esse projeto inicial simples? Eleve ainda mais! Estamos em busca de mentes inovadoras que não apenas criem, mas que também desafiem os padrões. Como você pode transformar essa estrutura inicial em algo verdadeiramente extraordinário? Demonstre o poder da sua criatividade e o impacto das suas ideias inovadoras!
+- **POST /projeto/criar**
+  - Descrição: Registrar um novo projeto
 
----
+- **POST /projetos/criar**
+  - Descrição: Registrar múltiplos projetos
 
-🔗 **Mantenha-se Conectado:**
-- [Discord](https://discord.gg/wzA9FGZHNv)
-- [Website](http://www.codigocertocoders.com.br/)
-- [LinkedIn](https://www.linkedin.com/company/codigocerto/)
-  
-🌐 **Contato:**
-- Email: codigocertocoders@gmail.com
+- **PUT /projeto/editar**
+  - Descrição: Alterar um projeto existente
 
----
+- **DELETE /projeto/deletar**
+  - Descrição: Remover um projeto
 
-### Precisa de Ajuda?
-Está com alguma dificuldade, encontrou algum problema no desafio ou tem alguma sugestão pra gente? Crie uma issue e descreva o que achar necessário.
-
-**Construindo o amanhã, hoje.**
+- **DELETE /projetos/deletar**
+  - Descrição: Remover múltiplos projetos
