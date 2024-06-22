@@ -5,20 +5,20 @@ https://jpfsgs-projetos.netlify.app/
 ## Descrição
 Aplicação Web para criar, editar, remover e gerenciar projetos, com opção de incluir prazo e descrição.
 
-![Lista de Projetos](screenshots\tela_visualizar.jpeg)
+![Lista de Projetos](screenshots/tela_visualizar.jpeg)
 |Desktop|Mobile|
 | - | - |
-| ![Adicionar Projeto](screenshots\tela_adicionar.jpeg 'title A') | ![Lista de Projetos Mobile](screenshots\tela_selecione_mobile.jpeg 'title B') |
+| ![Adicionar Projeto](screenshots/tela_adicionar.jpeg 'title A') | ![Lista de Projetos Mobile](screenshots/tela_selecione_mobile.jpeg 'title B') |
 
 |||
 | - | - |
-| ![Editar Projetos](screenshots\tela_editar.jpeg 'title A') | ![git hooks](screenshots\tela_remover_mobile.jpeg 'title B') |
+| ![Editar Projetos](screenshots/tela_editar.jpeg 'title A') | ![git hooks](screenshots/tela_remover_mobile.jpeg 'title B') |
 
 ### Darkmode
 
 |||
 | - | - |
-| ![Lista de Projetos](screenshots\tela_visualizar_dark.jpeg 'title A') | ![Remover Projetos](screenshots\tela_remover_mobile_dark.jpeg 'title B') |
+| ![Lista de Projetos](screenshots/tela_visualizar_dark.jpeg 'title A') | ![Remover Projetos](screenshots/tela_remover_mobile_dark.jpeg 'title B') |
 
 
 
