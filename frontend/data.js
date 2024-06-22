@@ -4,7 +4,7 @@ function loadingSpinner(){
     loadingIcon.toggle();
 }
 
-const URL = "http://localhost:2130";
+const URL = "https://trilhafullstackjr-jun15-production-2f5f.up.railway.app";
 
 export async function getProjetos(){
     loadingSpinner();
