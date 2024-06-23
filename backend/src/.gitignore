@@ -1,0 +1,25 @@
+# Ignorar a pasta node_modules
+node_modules/
+
+# Ignorar arquivos de configuração local
+.env
+
+# Ignorar arquivos de log
+*.log
+
+# Ignorar arquivos de cache do npm
+npm-debug.log*
+
+# Ignorar arquivos de configuração do editor de texto
+.vscode/
+
+# Ignorar arquivos de saída de compilação
+dist/
+build/
+
+# Ignorar arquivos de chave privada e certificados
+*.pem
+*.key
+
+# Ignorar arquivos de backup
+*~
