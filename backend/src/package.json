@@ -1,0 +1,27 @@
+{
+  "name": "trilha-fullstack-jr-backend",
+  "version": "1.0.0",
+  "description": "Back-end para o projeto de gerenciamento de projetos",
+  "main": "src/app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/DanSilva1910/TrilhaFullStackJR-JUN15.git"
+  },
+  "keywords": [
+    "\"Node.js\", \"Express\", \"MongoDB\", \"CRUD\""
+  ],
+  "author": "https://github.com/DanSilva1910",
+  "license": "ISC",
+  "dependencies": {
+    "bcrypt": "^5.1.1",
+    "express": "^4.19.2",
+    "jsonwebtoken": "^9.0.2",
+    "mongoose": "^8.4.3"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.4"
+  }
+}
