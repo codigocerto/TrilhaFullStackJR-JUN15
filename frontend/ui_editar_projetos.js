@@ -1,28 +1,35 @@
-import { getListaProjetos, editarProjeto, setProjetos } from "./data.js";
+//importação das funções para editar um projeto, receber a lista de projetos,
+//e setar o array de projetos global
+import { editarProjeto, getListaProjetos, setProjetos } from "./data.js";
 
+//elementos da página de exibição
 const listaProjetos = $("#lista-projetos")
 const projetoView = $("#view");
 const titulo = $("#titulo-lista");
 const anchor = $("#anchor");
 
+//adiciona a ação de rolar ao topo da lista ao clicar no anchor
 anchor.on("click", () => {
     listaProjetos[0].scrollTop = 0;
 })
 
-   
+
+//seção onde será mostrado o formulário para editar
 const projetoViewBox = $(`<div class="container my-5"></div>`);
+//container dentro da seção que será inserido o formulário
 const projetoViewBoxText = $(`<div id="view-box-text" class="p-5 text-center bg-body-tertiary rounded-3"></div>`);
 
+//função que recebe um número e retorna uma string com zeros a esquerda
+//usado para formatar o horário
 const zeroPad = (num, places) => String(num).padStart(places, '0');
 
-
+//cria a página do projeto, com o formulário para edição
 function criarPaginaProjeto(id, nome, descricao, prazo, criacao) {
     projetoViewBoxText.empty()
     projetoViewBox.empty()
     projetoView.empty();
 
-    
-
+    //cria objeto Date a partir da string de datas de criação e prazo, com adição de 'Z' para horário em UTC
     const dateCriacao = new Date(criacao + 'Z');
     const datePrazo = new Date(prazo  + 'Z');
 
@@ -53,90 +60,102 @@ function criarPaginaProjeto(id, nome, descricao, prazo, criacao) {
         <button id="botao-submit"type="submit" class="btn btn-primary mt-4">Confirmar Edição</button>
         </form>`)
 
-        const inputNomeProjeto = adicionarForm.find("#floatingNomeProjeto");
-        const inputDescricaoProjeto = adicionarForm.find("#floatingDescricao");
-        const inputCheckPrazo = adicionarForm.find("#flexCheckPrazo");
-        const inputPrazo = adicionarForm.find("#floatingPrazo");
+    //atribui os elementos do formulário
+    const inputNomeProjeto = adicionarForm.find("#floatingNomeProjeto");
+    const inputDescricaoProjeto = adicionarForm.find("#floatingDescricao");
+    const inputCheckPrazo = adicionarForm.find("#flexCheckPrazo");
+    const inputPrazo = adicionarForm.find("#floatingPrazo");
 
+    //insere o nome e a descrição do projeto nos inputs
+    inputNomeProjeto.val(nome);
+    inputDescricaoProjeto.val(descricao);
+    //atribui data mínima ao dia corrente, new Date().toLocaleDateString('fr-ca') retorna a data atual no formato aceito
+    inputPrazo.attr("min", new Date().toLocaleDateString('fr-ca'));
+    //inclui a data, caso não seja null
+    if(prazo){
+        inputCheckPrazo.prop('checked', true);
+        //insere a data no input, usando a função zeroPad para formatar os números
+        inputPrazo.val(`${datePrazo.getFullYear()}-${zeroPad(datePrazo.getMonth() + 1, 2)}-${zeroPad(datePrazo.getDate(), 2)}`);
 
-        inputNomeProjeto.val(nome);
-        inputDescricaoProjeto.val(descricao);
-        inputPrazo.attr("min", new Date().toLocaleDateString('fr-ca'));
-        if(prazo){
-            inputCheckPrazo.prop('checked', true);
-            inputPrazo.val(`${datePrazo.getFullYear()}-${zeroPad(datePrazo.getMonth() + 1, 2)}-${zeroPad(datePrazo.getDate(), 2)}`);
+    }
+    else{
+        inputCheckPrazo.prop('checked', false);
+        inputPrazo.attr("disabled", true);
+    }
 
+    //ativa e desativa o input de data, de acordo com o checkbox
+    inputCheckPrazo.on("change", event => {
+        const elemento = event.target;
+        if(elemento.checked){
+            inputPrazo.attr("disabled", false);
         }
         else{
-            inputCheckPrazo.prop('checked', false);
             inputPrazo.attr("disabled", true);
         }
+    });
+    
+    //ação acionada ao enviar o formulário
+    adicionarForm.on("submit", async(e) => {
+        e.preventDefault();
 
-        inputCheckPrazo.on("change", event => {
-            const elemento = event.target;
-            if(elemento.checked){
-                inputPrazo.attr("disabled", false);
-            }
-            else{
-                inputPrazo.attr("disabled", true);
-            }
-        });
+        //armazena os dados do input
+        let nomeEdit = inputNomeProjeto.val();
+        let descricaoEdit = inputDescricaoProjeto.val();
+        //atribui o prazo caso o checkbox esteja marcado, atribui null caso contrário
+        let prazoEdit = inputCheckPrazo.is(":checked") ? (inputPrazo.val() ? new Date(inputPrazo.val() + "T23:59:59Z") : null) : null;
+
+        //valores booleanos, indicando se há diferença entre os inputs e os valores armazenados
+        //atribui falso caso o valor seja o mesmo, ou se for vazio
+        let nomeHasChanged = nomeEdit !== nome && nomeEdit !== "";
+        let descricaoHasChanged = descricaoEdit !== descricao;
+        //o valor de prazo pode ser null, então primeiro é verificado se tanto o prazo e prazoEdit são truthy
+        //caso sejam truthy, a string é fatiada para desconsiderar o horário e comparar somente a data
+        let prazoHasChanged = prazo && prazoEdit ? prazoEdit.toISOString().slice(0, 10) !== prazo.slice(0, 10) : prazoEdit !== prazo;
+
+
+        //caso não haja alteração em nenhum, a função é retornada e encerrada
+        if(!nomeHasChanged && !descricaoHasChanged && !prazoHasChanged){
+            return;
+        }
+
+        //o objeto do projeto é criado, atribuindo uma string vazia caso não haja mudança
+        //a API somente altera o valor caso a string tenha algum conteúdo
+        const novoProjeto = {
+            id,
+            nome: nomeHasChanged ? nomeEdit : "", 
+            descricao: descricaoHasChanged ? descricaoEdit : "",
+            prazo: prazoHasChanged ? prazoEdit : prazo
+        }
         
-        adicionarForm.on("submit", async(e) => {
-            e.preventDefault();
-
-            let nomeEdit = inputNomeProjeto.val();
-            let descricaoEdit = inputDescricaoProjeto.val();
-            
-            let prazoEdit = inputCheckPrazo.is(":checked") ? (inputPrazo.val() ? new Date(inputPrazo.val() + "T23:59:59Z") : null) : null;
-            // try{prazoEdit = prazoEdit.toISOString().replace(".000Z", "")  + "T23:59:59";}
-            // catch{prazoEdit = null;}
-
-            let nomeHasChanged = nomeEdit !== nome && nomeEdit !== "";
-            let descricaoHasChanged = descricaoEdit !== descricao;
-            let prazoHasChanged = prazo && prazoEdit ? prazoEdit.toISOString().slice(0, 10) !== prazo.slice(0, 10) : prazoEdit !== prazo;
-   
-
-            //caso não haja alteração nos valores, a função é retornada e encerrada
-            if(!nomeHasChanged && !descricaoHasChanged && !prazoHasChanged){
-                return;
-            }
-
-            const novoProjeto = {
-                id,
-                nome: nomeHasChanged ? nomeEdit : "", 
-                descricao: descricaoHasChanged ? descricaoEdit : "",
-                prazo: prazoHasChanged ? prazoEdit : prazo
-            }
-            
-            
-            if(!confirm(`${nome} será alterado. Deseja continuar?`)
-            ){
-                return;
-            }
-            
-            const atualizacaoProjetos = await editarProjeto(novoProjeto);
-    
-            if(!atualizacaoProjetos){
-                alert("Erro na atualização do Projeto!")
-                return;
-            }
-            
-            criarListaProjetos(atualizacaoProjetos["projetos"]);
-            setProjetos(atualizacaoProjetos["projetos"]);
-            adicionarForm.find("h1").text(`Editar ${nomeEdit || nome}`);
-            alert(`${nomeEdit || nome} atualizado com sucesso!`);
-    
-    
-        });
-
-        projetoViewBoxText.append(adicionarForm);
-        projetoViewBox.append(projetoViewBoxText);
+        //confirma a alteração com o usuário
+        if(!confirm(`${nome} será alterado. Deseja continuar?`)
+        ){
+            return;
+        }
         
-        projetoView.append(projetoViewBox);
+
+        const atualizacaoProjetos = await editarProjeto(novoProjeto);
+        
+        
+        //a chave "projetos" contém o array de projetos atualizado
+        criarListaProjetos(atualizacaoProjetos["projetos"]);
+        setProjetos(atualizacaoProjetos["projetos"]);
+        adicionarForm.find("h1").text(`Editar ${nomeEdit || nome}`);
+        
+        alert(`${nomeEdit || nome} atualizado com sucesso!`);
+
+
+    });
+
+    //adiciona os elementos da página de edição do projeto à caixa de informações
+    projetoViewBoxText.append(adicionarForm);
+    projetoViewBox.append(projetoViewBoxText);
+    
+    projetoView.append(projetoViewBox);
 
 }
 
+//cria os itens da lista, que ao ser clicado mostra a página de edição do projeto
 function criarItemLista(id, nome, descricao, prazo, criacao) {
 
     
@@ -157,9 +176,10 @@ function criarItemLista(id, nome, descricao, prazo, criacao) {
     return itemLista;
 }
 
+//função que recebe o array de projetos e usa criarItemLista para criar cada um e dar append no elemento da lista
 function criarListaProjetos(projetos){
-    listaProjetos.empty();
     
+    listaProjetos.empty();
     projetos.forEach(projeto => {
         const itemLista = criarItemLista(projeto.id, projeto.nome, projeto.descricao, projeto.prazo, projeto.criacao);
         listaProjetos.append(itemLista);
@@ -172,6 +192,7 @@ function criarListaProjetos(projetos){
 
 }   
 
+//cria toda página de edição do projeto, chamada ao clicar na aba Editar
 export function showEditarProjeto() {
     let projetos = getListaProjetos();
     titulo.empty();
@@ -180,6 +201,8 @@ export function showEditarProjeto() {
     projetoViewBox.empty()
     projetoView.empty();
 
+
+    //antes de um projeto ser seleciona, mostra "Selecione um Projeto para Editar" na caixa de informação
     projetoView.append($(
         `<div class="container my-5">
             <div class="p-5 text-center bg-body-tertiary rounded-3">
@@ -188,6 +211,7 @@ export function showEditarProjeto() {
         </div>`));
     
     
+    //ícone e título da lista
     const icon = $(`
     <svg xmlns="http://www.w3.org/2000/svg" width="35" height="35" fill="currentColor" class="bi bi-journal-text" viewBox="0 0 16 16">
         <path d="M5 10.5a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 0 1h-2a.5.5 0 0 1-.5-.5m0-2a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5m0-2a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5m0-2a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5"/>
@@ -199,9 +223,6 @@ export function showEditarProjeto() {
     titulo.append(icon);
     titulo.append(`<h3>Editar Projetos<h3>`);
 
-
+    //cria os items da lista
     criarListaProjetos(projetos);
-
-
-
 }

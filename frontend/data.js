@@ -1,12 +1,19 @@
+//arquivo de conexões com a API
+
+//ícone de carregamento
 const loadingIcon = $(".spinner-border");
 
+//função para exibir e esconder ícone de carregamento
+//é ativada no início das requisições e escondida no fim
 function loadingSpinner(){
     loadingIcon.toggle();
 }
 
-const URL = "https://trilhafullstackjr-jun15-production-2f5f.up.railway.app";
-// const URL = "http://127.0.0.1:2130";
+//URL da API
+// const URL = "https://trilhafullstackjr-jun15-production-2f5f.up.railway.app";
+const URL = "http://127.0.0.1:2130";
 
+//requisita a lista de todos os projetos
 export async function getProjetos(){
     loadingSpinner();
     try{
@@ -27,6 +34,7 @@ export async function getProjetos(){
     }
 }
 
+//envia um novo projeto para ser adicionado, e retorna a lista de projetos atualizada
 export async function addProjeto(dadosProjeto){
     loadingSpinner();
     const options = {
@@ -49,15 +57,16 @@ export async function addProjeto(dadosProjeto){
         return data;
     }
     catch(error){
-        alert("O projeto nao pôde ser inserido");
+        alert("O projeto não pôde ser inserido");
         console.error(error);
     }
-    loadingSpinner()
+    loadingSpinner();
 
 }
 
+//edita um projeto, e retorna a lista de projetos atualizada
 export async function editarProjeto(dadosProjeto){
-    loadingSpinner()
+    loadingSpinner();
     const options = {
         method: 'PUT',
         headers: {
@@ -78,14 +87,15 @@ export async function editarProjeto(dadosProjeto){
         return data;
     }
     catch(error){
-        alert("O projeto nao pôde editado");
+        alert("O projeto não pôde ser editado");
         console.error(error);
     }
-    loadingSpinner()
+    loadingSpinner();
 }
 
+//remove os projetos com os ids passados, e retorna a lista de projetos atualizada
 export async function removerProjeto(ids){
-    loadingSpinner()
+    loadingSpinner();
     const options = {
         method: 'DELETE',
         headers: {
@@ -104,25 +114,33 @@ export async function removerProjeto(ids){
         const data = await response.json();
 
         if(data["projetos não encontrados"].length > 0){
-            throw new Error(`O seguintes projetos nao puderam ser removidos ${data["projetos não encontrados"].join(" ")}`);
+            throw new Error(`O seguintes projetos não puderam ser removidos ${data["projetos não encontrados"].join(" ")}`);
         }
-        loadingSpinner()
+        loadingSpinner();
         return data;
     }
     catch(error){
-        alert("O projeto nao pôde ser removido");
+        alert("O projeto não pôde ser removido");
         console.error(error);
     }
-    loadingSpinner()
+    loadingSpinner();
 
 }
 
-let projetos = await getProjetos();
+//recebe e armazena a lista de projetos
 
+let projetos = await getProjetos();
+if(!projetos){
+    alert("Não foi possível se conectar so servidor.");
+}
+
+
+//exporta uma função para retornar a lista de projetos
 export function getListaProjetos(){
     return projetos;
 }
 
+//exporta uma função para setar a lista de projetos
 export function setProjetos(atualizacaoProjetos){
     projetos = atualizacaoProjetos;
 }

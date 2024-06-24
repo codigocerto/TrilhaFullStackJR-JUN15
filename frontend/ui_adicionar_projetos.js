@@ -1,18 +1,26 @@
+//importação das funções para adicionar um projeto, receber a lista de projetos,
+//e setar o array de projetos global
 import { addProjeto, getListaProjetos, setProjetos } from "./data.js";
+//função que recebe uma data e retorna uma indicação simples do prazo
 import { tempoRestante } from "./ui_pagina_projetos.js";
 
+//elementos da página de exibição
 const projetoView = $("#view");
 const listaProjetos = $("#lista-projetos");
 const titulo = $("#titulo-lista");
 const anchor = $("#anchor");
 
+//adiciona a ação de rolar ao topo da lista ao clicar no anchor
 anchor.on("click", () => {
     listaProjetos[0].scrollTop = 0;
 })
 
+//seção onde será mostrado o formulário para adicionar
 const projetoViewBox = $(`<div class="container my-5"></div>`);
+//container dentro da seção que será inserido o formulário
 const projetoViewBoxText = $(`<div id="view-box-text" class="p-5 text-center bg-body-tertiary rounded-3"></div>`);
 
+//formulário para adicionar novo projeto
 const adicionarForm = $(`
     <form id="add-projeto-form">
     <h1 class="text-body-emphasis mb-5">Adicionar Projeto</h1>
@@ -38,6 +46,7 @@ const adicionarForm = $(`
     </form>`)
 
 
+//função que cria um item da lista, o item não é clicável e é indicado como desativado
 function criarItemLista(id, nome, prazo) {
 
     const itemLista = $(`<a id="${id}" role="button" class="disabled list-group-item list-group-item-action py-3 lh-sm" aria-current="true">
@@ -50,6 +59,7 @@ function criarItemLista(id, nome, prazo) {
     return itemLista;
 }
 
+//função que recebe o array de projetos e usa criarItemLista para criar cada um e dar append no elemento da lista
 function criarListaProjetos(projetos){
     
     listaProjetos.empty();
@@ -60,9 +70,13 @@ function criarListaProjetos(projetos){
     });
 }
 
+//cria toda página de edição dos projetos, chamada ao clicar na aba Adicionar
 export function showAdicionarProjeto() {
     
+    //recebe o atual array de projetos
     let projetos = getListaProjetos();
+    
+    //atribui os elementos do formulário
     const inputNomeProjeto = adicionarForm.find("#floatingNomeProjeto");
     const inputDescricaoProjeto = adicionarForm.find("#floatingDescricao");
     const inputCheckPrazo = adicionarForm.find("#flexCheckPrazo");
@@ -72,13 +86,16 @@ export function showAdicionarProjeto() {
     listaProjetos.empty();
     projetoView.empty();
 
-    
+    // append do formulário no container de texto
     projetoViewBoxText.append(adicionarForm);
+
+    //append do container de texto ao container principal
     projetoViewBox.append(projetoViewBoxText);
     
+    //append do container principal à seção de informações
     projetoView.append(projetoViewBox);
 
-    
+    //ícone e título da lista
     const icon = $(`
     <svg xmlns="http://www.w3.org/2000/svg" width="35" height="35" fill="currentColor" class="bi bi-journal-plus" viewBox="0 0 16 16">
         <path fill-rule="evenodd" d="M8 5.5a.5.5 0 0 1 .5.5v1.5H10a.5.5 0 0 1 0 1H8.5V10a.5.5 0 0 1-1 0V8.5H6a.5.5 0 0 1 0-1h1.5V6a.5.5 0 0 1 .5-.5"/>
@@ -89,11 +106,15 @@ export function showAdicionarProjeto() {
     titulo.append(icon);
     titulo.append(`<h3>Adicionar Projetos<h3>`);
 
+    //chama a função de criação da lista
     criarListaProjetos(projetos);
 
+    //inicia o input de data desativado
     inputPrazo.attr("disabled", true);
+    //atribui data mínima ao dia corrente, new Date().toLocaleDateString('fr-ca') retorna a data atual no formato aceito
     inputPrazo.attr("min", new Date().toLocaleDateString('fr-ca'));
     
+    //ativa e desativa o input de data, de acordo com o checkbox
     inputCheckPrazo.on("change", event => {
         const elemento = event.target;
         if(elemento.checked){
@@ -104,21 +125,27 @@ export function showAdicionarProjeto() {
         }
     });
 
+    //ação acionada ao enviar o formulário
     adicionarForm.on("submit", async(e) => {
         e.preventDefault();
         const nome = inputNomeProjeto.val();
         const descricao = inputDescricaoProjeto.val();
+        //atribui o prazo caso o checkbox esteja marcado, atribui null caso contrário
         const prazo = inputCheckPrazo.is(":checked") && inputPrazo.val() ? new Date(inputPrazo.val() + "T23:59:59") : null;
-    
-        const novoProjeto = {nome, descricao, prazo}
         
+        //cria um objeto com os atributos
+        const novoProjeto = {nome, descricao, prazo}
+        //envia o objeto como parametro para ser adicionado, e armazena o retorno
         const atualizacaoProjetos = await addProjeto(novoProjeto);
 
+        //a chave "projetos" contém o array de projetos atualizado
         criarListaProjetos(atualizacaoProjetos["projetos"]);
         setProjetos(atualizacaoProjetos["projetos"])
         projetos = atualizacaoProjetos["projetos"];
+        alert(`${nome} criado com sucesso!`);
 
 
+        //ao adicionar um novo projeto, a lista de projetos é rolada até o final pra mostrar o novo projeto
         listaProjetos[0].scrollTop = listaProjetos[0].scrollHeight;
 
     });

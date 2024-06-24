@@ -7,7 +7,6 @@ from schema import Projeto, get_session, Session
 
 
 app = FastAPI(title="Gerenciamento de Projetos")
-
 allowed_origins = os.getenv("ALLOWED_ORIGINS", "").split(',')
 
 app.add_middleware(
@@ -43,8 +42,7 @@ async def registrar_projeto(projeto_input: ProjetoInput, session: Session = Depe
     session.add(projeto)
     session.commit()
     
-    projetos = session.query(Projeto).all()
-
+    # Retorna a lista de projetos atualizada
     try:
         projetos = session.query(Projeto).all()
         return {
@@ -83,6 +81,7 @@ async def registrar_multiplos_projetos(projetos_input: MultProjetosInput, sessio
                 "erro": str(erro.detail)
             })
 
+    # Retorna a lista de projetos atualizada
     try:
         projetos = session.query(Projeto).all()
         return {
@@ -115,6 +114,7 @@ async def alterar_projeto(projeto_update: ProjetoUpdate, session: Session = Depe
     session.add(projeto)
     session.commit()
     
+    # Retorna a lista de projetos atualizada
     try:
         projetos = session.query(Projeto).all()
 
@@ -128,10 +128,13 @@ async def alterar_projeto(projeto_update: ProjetoUpdate, session: Session = Depe
             }
     
     except:
-        return{
-            "id": projeto.id,
-            "nome": projeto.nome,
-            "descricao": projeto.descricao
+        return {
+            "projeto atualizado":{
+                "id": projeto.id,
+                "nome": projeto.nome,
+                "descricao": projeto.descricao
+                },
+            "projetos": []
             }
 
     
@@ -145,13 +148,16 @@ async def remover_projeto(projeto_delete: ProjetoDelete, session: Session = Depe
     session.delete(projeto)
     session.commit()
 
+    # Retorna a lista de projetos atualizada
     try:
         projetos = session.query(Projeto).all()
         return {"deletado": projeto.nome,
                 "projetos ": projetos}
     except:
-        return {"deletado": projeto.nome,
-                "projetos ": "não foi possível recuperar os projetos"}
+        return {
+            "deletado": projeto.nome,
+            "projetos ": []
+            }
 
 @app.delete('/projetos/deletar')
 async def remover_multiplos_projetos(projeto_delete: ProjetosDelete, session: Session = Depends(get_session)):
@@ -171,6 +177,7 @@ async def remover_multiplos_projetos(projeto_delete: ProjetosDelete, session: Se
         except HTTPException:
             projetos_nao_encontrados.append(id)
 
+    # Retorna a lista de projetos atualizada
     try:
         projetos = session.query(Projeto).all()
 
