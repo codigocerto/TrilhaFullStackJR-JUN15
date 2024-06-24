@@ -26,7 +26,7 @@ Aplicação Web para criar, editar, remover e gerenciar projetos, com opção de
 ## Funcionalidades
 - Visualizar todos os projetos
 - Adicionar novo projeto
-- Editar Projeto
+- Editar projeto
 - Remover projetos
 
 ## Tecnologias Utilizadas
@@ -40,7 +40,7 @@ Aplicação Web para criar, editar, remover e gerenciar projetos, com opção de
 
 ### Frontend
 - **Linguagens**: HTML, CSS, JavaScript
-- **Frameworks/Libraries**: Bootstrap, SASS, jQuery
+- **Frameworks/Bibliotecas**: Bootstrap, SASS, jQuery
 - **Hospedagem**: Netlify
 
 ## Endpoints da API

@@ -1,6 +1,5 @@
 backend/__pycache__/
 node_modules/
-frontend/styles.css.map
 frontend/styles-raw.css
 package-lock.json
 package.json
