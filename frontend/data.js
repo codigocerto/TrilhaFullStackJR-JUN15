@@ -10,8 +10,8 @@ function loadingSpinner(){
 }
 
 //URL da API
-// const URL = "https://trilhafullstackjr-jun15-production-2f5f.up.railway.app";
-const URL = "http://127.0.0.1:2130";
+const URL = "https://trilhafullstackjr-jun15-production-2f5f.up.railway.app";
+// const URL = "http://127.0.0.1:2130";
 
 //requisita a lista de todos os projetos
 export async function getProjetos(){
