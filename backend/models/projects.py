@@ -6,6 +6,8 @@ class ProjetoInput(BaseModel):
     nome: str
     descricao: Optional[str]
     prazo: Optional[datetime] = Field(description="Horário em UTC")
+    is_publico: bool
+    usuario_id: int
 
 class MultProjetosInput(BaseModel):
     projetos: List[ProjetoInput]
@@ -15,9 +17,11 @@ class ProjetoUpdate(BaseModel):
     nome: Optional[str]
     descricao: Optional[str]
     prazo: Optional[datetime]= Field(description="Horário em UTC")
+    is_publico: Optional[bool]
 
 class ProjetoDelete(BaseModel):
     id: int
 
 class ProjetosDelete(BaseModel):
     ids: List[int]
+

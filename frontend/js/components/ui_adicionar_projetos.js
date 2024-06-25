@@ -1,6 +1,6 @@
 //importação das funções para adicionar um projeto, receber a lista de projetos,
 //e setar o array de projetos global
-import { addProjeto, getListaProjetos, setProjetos } from "./data.js";
+import { addProjeto, getListaProjetos, setProjetos } from "../data/data.js";
 //função que recebe uma data e retorna uma indicação simples do prazo
 import { tempoRestante } from "./ui_pagina_projetos.js";
 

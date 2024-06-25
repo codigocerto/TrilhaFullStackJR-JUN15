@@ -1,9 +1,8 @@
-backend/__pycache__/
+__pycache__/
 node_modules/
-frontend/styles-raw.css
 package-lock.json
 package.json
 venv/
-projetos_database.db
 .env
 README old.md
+backend/database/projetos_database old.db

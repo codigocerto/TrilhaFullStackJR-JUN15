@@ -7,10 +7,10 @@ if(isDarkTheme){
 }
 
 //imports das funções das páginas de exibição
-import { showProjeto } from "./ui_pagina_projetos.js";
-import { showRemoverProjetos } from "./ui_remover_projetos.js";
-import { showAdicionarProjeto } from "./ui_adicionar_projetos.js";
-import { showEditarProjeto } from "./ui_editar_projetos.js";
+import { showProjeto } from "./components/ui_pagina_projetos.js";
+import { showRemoverProjetos } from "./components/ui_remover_projetos.js";
+import { showAdicionarProjeto } from "./components/ui_adicionar_projetos.js";
+import { showEditarProjeto } from "./components/ui_editar_projetos.js";
 
 //elementos dos botões das abas
 const botaoProjetos = $("#projetos");

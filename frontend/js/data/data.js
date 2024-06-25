@@ -10,8 +10,8 @@ function loadingSpinner(){
 }
 
 //URL da API
-const URL = "https://trilhafullstackjr-jun15-production-2f5f.up.railway.app";
-// const URL = "http://127.0.0.1:2130";
+// const URL = "https://trilhafullstackjr-jun15-production-2f5f.up.railway.app";
+const URL = "http://127.0.0.1:2130";
 
 //requisita a lista de todos os projetos
 export async function getProjetos(){
@@ -46,7 +46,7 @@ export async function addProjeto(dadosProjeto){
     };
 
     try{
-        const response = await fetch(`${URL}/projeto/criar`, options);
+        const response = await fetch(`${URL}/projetos/criar`, options);
         
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
@@ -76,7 +76,7 @@ export async function editarProjeto(dadosProjeto){
     };
 
     try{
-        const response = await fetch(`${URL}/projeto/editar`, options);
+        const response = await fetch(`${URL}/projetos/editar`, options);
         
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
@@ -105,7 +105,7 @@ export async function removerProjeto(ids){
     };
 
     try{
-        const response = await fetch(`${URL}/projetos/deletar`, options);
+        const response = await fetch(`${URL}/projetos/deletar_varios`, options);
         
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);

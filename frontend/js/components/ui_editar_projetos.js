@@ -1,6 +1,6 @@
 //importação das funções para editar um projeto, receber a lista de projetos,
 //e setar o array de projetos global
-import { editarProjeto, getListaProjetos, setProjetos } from "./data.js";
+import { editarProjeto, getListaProjetos, setProjetos } from "../data/data.js";
 
 //elementos da página de exibição
 const listaProjetos = $("#lista-projetos")
@@ -209,7 +209,10 @@ export function showEditarProjeto() {
                 <h1 class="text-body-emphasis">Selecione um Projeto para Editar</h1>
             </div>
         </div>`));
-    
+
+    if(!projetos.length){
+        projetoViewBox.find("h1").text("Não há projetos cadastrados");
+    }
     
     //ícone e título da lista
     const icon = $(`

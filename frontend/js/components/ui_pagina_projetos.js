@@ -1,5 +1,5 @@
 //importa a função pra receber o array de projetos
-import { getListaProjetos } from "./data.js";
+import { getListaProjetos } from "../data/data.js";
 
 //elementos da página de exibição
 const projetoView = $("#view"); 
