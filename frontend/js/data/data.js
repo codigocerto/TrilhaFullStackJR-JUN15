@@ -13,17 +13,50 @@ function loadingSpinner(){
 // const URL = "https://trilhafullstackjr-jun15-production-2f5f.up.railway.app";
 const URL = "http://127.0.0.1:2130";
 
-//requisita a lista de todos os projetos
-export async function getProjetos(){
+//requisita a lista de todos os projetos públicos
+export async function getProjetosPublicos(){
     loadingSpinner();
     try{
-        const response = await fetch (`${URL}/projetos`);
+        const response = await fetch (`${URL}/projetos/`);
         if(!response.ok){
             throw new Error(`HTTP error! status: ${response.status}`);
         }
         const data = await response.json();
         
         loadingSpinner();
+        return data
+
+    }
+    catch(error){
+        console.error(error);
+        loadingSpinner();
+        return null;
+    }
+}
+
+//requisita a lista de todos os projetos do usuário
+export async function getMeusProjetos(){
+    if(localStorage.getItem('access_token') == ''){
+        console.log("return");
+        return;
+    }
+    loadingSpinner();
+    const options = {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${localStorage.getItem('access_token')}`
+        }
+    }
+    try{
+        const response = await fetch (`${URL}/projetos/usuario`, options);
+        if(!response.ok){
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const data = await response.json();
+        
+        loadingSpinner();
+        localStorage.getItem('access_token');
         return data
 
     }
@@ -127,20 +160,73 @@ export async function removerProjeto(ids){
 
 }
 
-//recebe e armazena a lista de projetos
+//autenticação do usuário
+export async function validar_usuario(username, password){
+    loadingSpinner();
+    const options = {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: new URLSearchParams({
+            "username": username,
+            "password": password
+        })
+    };
+    try{
+        const response = await fetch(`${URL}/auth/token`, options);
+        
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        
+        const data = await response.json();
 
-let projetos = await getProjetos();
-if(!projetos){
-    alert("Não foi possível se conectar so servidor.");
+        // if(data["projetos não encontrados"].length > 0){
+        //     throw new Error(`O seguintes projetos não puderam ser removidos ${data["projetos não encontrados"].join(" ")}`);
+        // }
+        loadingSpinner();
+        return data;
+    }
+    catch(error){
+        loadingSpinner();
+        console.error(error);
+    }
 }
 
-
-//exporta uma função para retornar a lista de projetos
-export function getListaProjetos(){
-    return projetos;
+//recebe e armazena a lista de projetos públicos
+let projetosPublicos = await getProjetosPublicos();
+if(!projetosPublicos){
+    alert("Não foi possível se conectar ao servidor.");
 }
-
-//exporta uma função para setar a lista de projetos
+export function importProjetosPublicos(){
+    return projetosPublicos;
+}
 export function setProjetos(atualizacaoProjetos){
     projetos = atualizacaoProjetos;
+}
+
+//recebe e armazena a lista de projetos do usuário
+let logado= false;
+let meusProjetos;
+// let meusProjetos = await getMeusProjetos();
+// if(meusProjetos){
+//     logado = true;
+// }
+// else{
+//     console.error("Usuário não conectado");
+// }
+export async function atualizarMeusProjetos(){
+    meusProjetos = await getMeusProjetos();
+    console.log(meusProjetos);
+    if(meusProjetos){
+        return true;
+    }
+    return false;
+}
+export function importMeusProjetos(){
+    return meusProjetos;
+}
+export function setMeusProjetos(atualizacaoProjetos){
+    meusProjetos = atualizacaoProjetos;
 }

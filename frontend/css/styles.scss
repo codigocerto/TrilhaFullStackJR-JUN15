@@ -7,7 +7,7 @@ $nav-link-color: $codigo-certo-color-3;
 $nav-link-hover-color: $codigo-certo-color-3;
 
 
-@import "../node_modules/bootstrap/scss/bootstrap";
+@import "../../node_modules/bootstrap/scss/bootstrap";
 
 
 .btn-primary, .btn-primary:hover{
@@ -54,7 +54,7 @@ $nav-link-hover-color: $codigo-certo-color-3;
         justify-items: stretch;
     }
     #sidebar{
-        height: 45vh;
+        max-height: 45vh;
         width: 100vw;
     }
   }

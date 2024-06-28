@@ -1,5 +1,6 @@
 //importa a função pra receber o array de projetos
-import { getListaProjetos } from "../data/data.js";
+import { importMeusProjetos, atualizarMeusProjetos } from "../data/data.js";
+
 
 //elementos da página de exibição
 const projetoView = $("#view"); 
@@ -98,8 +99,9 @@ function criarItemLista(id, nome, descricao, prazo, criacao) {
 }
 
 //cria toda página de exibição do projeto, chamada ao clicar na aba Projetos
-export async function showProjeto() {
-    let projetos = getListaProjetos();
+export async function showMeusProjetos() {
+    let projetos = importMeusProjetos();
+    console.log(projetos);
     listaProjetos.empty();
     projetoView.empty();
     titulo.empty();
@@ -125,7 +127,7 @@ export async function showProjeto() {
         </svg>`)
 
     titulo.append(icon);
-    titulo.append(`<h3>Lista de Projetos<h3>`);
+    titulo.append(`<h3>Meus Projetos<h3>`);
 
 
     //cria um item da lista pra cada projeto armazenado no array de projetos

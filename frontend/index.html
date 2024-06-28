@@ -12,10 +12,13 @@
 </head>
 
 <body>
-    <header>
-        <ul class="nav nav-tabs bg-primary">
+    <header class="bg-primary d-flex flex-wrap align-items-center justify-content-between justify-content-md-between border-bottom">
+        <ul class="nav nav-tabs ">
             <li class="nav-item">
-                <a id="projetos" class="nav-link" href="#">Projetos</a>
+                <a id="projetos-publicos" class="nav-link" href="#">Projetos Públicos</a>
+            </li>
+            <li class="nav-item">
+                <a id="meus-projetos" class="nav-link" href="#">Meus Projetos</a>
             </li>
             <li class="nav-item">
                 <a id="adicionar" class="nav-link" href="#">Adicionar</a>
@@ -27,6 +30,10 @@
                 <a id="remover" class="nav-link" href="#">Remover</a>
             </li>
         </ul>
+        <div id="login-buttons" class="col-md-3 text-end">
+            <!-- <button id="login" type="button" class="btn btn-outline-light me-2">Login</button>
+            <button id="signup" type="button" class="btn btn-light me-2">Sign-up</button> -->
+        </div>
     </header>
     <section id="area">
         <div id="sidebar" class="d-flex flex-column align-items-stretch flex-shrink-0 bg-body-tertiary g-col-3">

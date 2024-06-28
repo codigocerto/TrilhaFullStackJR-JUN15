@@ -7,42 +7,77 @@ if(isDarkTheme){
 }
 
 //imports das funções das páginas de exibição
-import { showProjeto } from "./components/ui_pagina_projetos.js";
+import { showProjetosPublicos } from "./components/ui_pagina_projetos_publicos.js";
+import { showMeusProjetos } from "./components/ui_pagina_meus_projetos.js";
 import { showRemoverProjetos } from "./components/ui_remover_projetos.js";
 import { showAdicionarProjeto } from "./components/ui_adicionar_projetos.js";
 import { showEditarProjeto } from "./components/ui_editar_projetos.js";
+import { isLogado, showLoginPage, verifyLogado } from "./components/ui_login.js";
+
+await verifyLogado();
 
 //elementos dos botões das abas
-const botaoProjetos = $("#projetos");
+const botaoProjetosPublicos = $("#projetos-publicos");
+const botaoMeusProjetos = $("#meus-projetos");
 const botaoAdicionar = $("#adicionar");
 const botaoEditar = $("#editar");
 const botaoRemover = $("#remover");
 
+//elementos botões autenticação
+const botaoLogin = $("#login")
+const botaoSignUp = $("#signup")
+
+//ações de autenticação
+
+
 //ação de exibir página
-botaoProjetos.on("click", () => {
+botaoProjetosPublicos.on("click", () => {
     $(".nav-link").removeClass("active");
-    botaoProjetos.addClass("active");
-    showProjeto();
+    botaoProjetosPublicos.addClass("active");
+    showProjetosPublicos();
+})
+botaoMeusProjetos.on("click", () => {
+    if(!isLogado()){
+        showLoginPage();
+        return;
+    }
+    $(".nav-link").removeClass("active");
+    botaoMeusProjetos.addClass("active");
+    showMeusProjetos();
 })
 botaoAdicionar.on("click", () => {
+    if(!isLogado()){
+        showLoginPage();
+        return;
+    }
     $(".nav-link").removeClass("active");
     botaoAdicionar.addClass("active");
     showAdicionarProjeto();
 
 });
 botaoEditar.on("click", () => {
+    if(!isLogado()){
+        showLoginPage();
+        return;
+    }
     $(".nav-link").removeClass("active");
     botaoEditar.addClass("active");
     showEditarProjeto();
 });
 botaoRemover.on("click", () => {
+    if(!isLogado()){
+        showLoginPage();
+        return;
+    }
     $(".nav-link").removeClass("active");
     botaoRemover.addClass("active");
     showRemoverProjetos();
 });
 
 //clica na aba ao iniciar a página
-botaoProjetos.click()
+// botaoLogin.click()
+botaoProjetosPublicos.click()
+// botaoMeusProjetos.click()
 // botaoAdicionar.click();
 // botaoEditar.click();
 // botaoRemover.click();

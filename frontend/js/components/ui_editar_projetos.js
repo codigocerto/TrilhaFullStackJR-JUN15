@@ -1,6 +1,6 @@
 //importação das funções para editar um projeto, receber a lista de projetos,
 //e setar o array de projetos global
-import { editarProjeto, getListaProjetos, setProjetos } from "../data/data.js";
+import { editarProjeto, importMeusProjetos, setProjetos } from "../data/data.js";
 
 //elementos da página de exibição
 const listaProjetos = $("#lista-projetos")

@@ -1,8 +1,8 @@
 //importação das funções para adicionar um projeto, receber a lista de projetos,
 //e setar o array de projetos global
-import { addProjeto, getListaProjetos, setProjetos } from "../data/data.js";
+import { addProjeto, importMeusProjetos, setProjetos } from "../data/data.js";
 //função que recebe uma data e retorna uma indicação simples do prazo
-import { tempoRestante } from "./ui_pagina_projetos.js";
+import { tempoRestante } from "./ui_pagina_projetos_publicos.js";
 
 //elementos da página de exibição
 const projetoView = $("#view");
@@ -74,7 +74,7 @@ function criarListaProjetos(projetos){
 export function showAdicionarProjeto() {
     
     //recebe o atual array de projetos
-    let projetos = getListaProjetos();
+    let projetos = importMeusProjetos();
     
     //atribui os elementos do formulário
     const inputNomeProjeto = adicionarForm.find("#floatingNomeProjeto");

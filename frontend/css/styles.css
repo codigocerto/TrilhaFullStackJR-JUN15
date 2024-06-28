@@ -12009,7 +12009,7 @@ textarea.form-control-lg {
     justify-items: stretch;
   }
   #sidebar {
-    height: 45vh;
+    max-height: 45vh;
     width: 100vw;
   }
 }/*# sourceMappingURL=styles.css.map */
