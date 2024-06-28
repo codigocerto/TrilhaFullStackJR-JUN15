@@ -1,5 +1,7 @@
+from typing import Annotated
 from fastapi import APIRouter, Depends, HTTPException
 from datetime import datetime, timezone
+from routes.auth import get_current_usuario
 from models.projects import MultProjetosInput, ProjetoDelete, ProjetoInput, ProjetoUpdate, ProjetosDelete
 from database.schema import Projeto, get_session, Session
 from sqlalchemy.orm import joinedload
@@ -11,13 +13,20 @@ async def get_projetos_publicos(session: Session = Depends(get_session)):
     projetos = session.query(Projeto).options(joinedload(Projeto.usuario)).filter(Projeto.is_publico).all()
     
     if projetos: 
-        return projetos
+        return [{
+            "id": projeto.id,
+            "criacao": projeto.criacao,
+            "nome": projeto.nome,
+            "descricao": projeto.descricao,
+            "prazo": projeto.prazo,
+            "usuario": projeto.usuario.nome,
+        } for projeto in projetos]
     
     return []
 
-@router.get('/usuario/{id}')
-async def get_projetos_usuario(id, session: Session = Depends(get_session)):
-    projetos = session.query(Projeto).filter(Projeto.usuario_id == id).all()
+@router.get('/usuario')
+async def get_projetos_usuario(user: Annotated[dict, Depends(get_current_usuario)], session: Session = Depends(get_session)):
+    projetos = session.query(Projeto).filter(Projeto.usuario_id == user["id"]).all()
     
     if projetos: 
         return projetos
@@ -26,7 +35,7 @@ async def get_projetos_usuario(id, session: Session = Depends(get_session)):
 
 
 @router.post('/criar')
-async def registrar_projeto(projeto_input: ProjetoInput, session: Session = Depends(get_session)):
+async def registrar_projeto(user: Annotated[dict, Depends(get_current_usuario)], projeto_input: ProjetoInput, session: Session = Depends(get_session)):
     if(not projeto_input.nome.strip()):
        raise HTTPException(status_code=422, detail='O nome do projeto não pode ser vazio')
     
@@ -37,26 +46,14 @@ async def registrar_projeto(projeto_input: ProjetoInput, session: Session = Depe
                       descricao=projeto_input.descricao,
                       prazo=projeto_input.prazo,
                       is_publico=projeto_input.is_publico,
-                      usuario_id=projeto_input.usuario_id)
+                      usuario_id=user["id"])
     session.add(projeto)
     session.commit()
     
-    # Retorna a lista de projetos atualizada
-    try:
-        projetos = session.query(Projeto).options(joinedload(Projeto.usuario)).all()
-        return {
-            "projeto inserido": projeto,
-            "projetos": projetos
-            }
-    except:
-        
-        return {
-        "projeto inserido": projeto,
-        "projetos": []
-    }
+    return await get_projetos_usuario(user, session)
 
 @router.post('/criar_varios')
-async def registrar_multiplos_projetos(projetos_input: MultProjetosInput, session: Session = Depends(get_session)):
+async def registrar_multiplos_projetos(user: Annotated[dict, Depends(get_current_usuario)], projetos_input: MultProjetosInput, session: Session = Depends(get_session)):
     
     projetos_inseridos = []
     projetos_com_erro = []
@@ -70,7 +67,7 @@ async def registrar_multiplos_projetos(projetos_input: MultProjetosInput, sessio
                               descricao=projeto_input.descricao,
                               prazo=projeto_input.prazo,
                               is_publico=projeto_input.is_publico,
-                              usuario_id=projeto_input.usuario_id)
+                              usuario_id=user["id"])
             session.add(projeto)
             session.commit()
             
@@ -84,25 +81,16 @@ async def registrar_multiplos_projetos(projetos_input: MultProjetosInput, sessio
                 "erro": str(erro.detail)
             })
 
-    # Retorna a lista de projetos atualizada
-    try:
-        projetos = session.query(Projeto).options(joinedload(Projeto.usuario)).all()
-        return {
-            "projetos inseridos": projetos_inseridos,
-            "projetos com erro": projetos_com_erro if projetos_com_erro else 0,
-            "projetos": projetos
-            }
-    except:
-        
-        return {
+    projetos = await get_projetos_usuario(user, session)
+    return {
         "projetos inseridos": projetos_inseridos,
         "projetos com erro": projetos_com_erro if projetos_com_erro else 0,
-        "projetos": []
-    }
+        "projetos": projetos
+        }
 
 @router.put('/editar')
-async def alterar_projeto(projeto_update: ProjetoUpdate, session: Session = Depends(get_session)):
-    projeto = session.query(Projeto).filter(projeto_update.id == Projeto.id).first()
+async def alterar_projeto(user: Annotated[dict, Depends(get_current_usuario)], projeto_update: ProjetoUpdate, session: Session = Depends(get_session)):
+    projeto = session.query(Projeto).filter(projeto_update.id == Projeto.id, Projeto.usuario_id == user["id"]).first()
     
     if not projeto:
         raise HTTPException(status_code=404, detail='Projeto não encontrado')
@@ -119,59 +107,41 @@ async def alterar_projeto(projeto_update: ProjetoUpdate, session: Session = Depe
     session.add(projeto)
     session.commit()
     
-    # Retorna a lista de projetos atualizada
-    try:
-        projetos = session.query(Projeto).options(joinedload(Projeto.usuario)).all()
 
-        return {
-            "projeto atualizado":{
-                "id": projeto.id,
-                "nome": projeto.nome,
-                "descricao": projeto.descricao
-                },
-            "projetos": projetos
-            }
-    
-    except:
-        return {
-            "projeto atualizado":{
-                "id": projeto.id,
-                "nome": projeto.nome,
-                "descricao": projeto.descricao
-                },
-            "projetos": []
-            }
+    projetos = await get_projetos_usuario(user, session)
+    return {
+        "projeto atualizado":{
+            "id": projeto.id,
+            "nome": projeto.nome,
+            "descricao": projeto.descricao
+            },
+        "projetos": projetos
+        }
 
     
 
 @router.delete('/deletar')
-async def remover_projeto(projeto_delete: ProjetoDelete, session: Session = Depends(get_session)):
-    projeto = session.query(Projeto).filter(projeto_delete.id == Projeto.id).first()
+async def remover_projeto(user: Annotated[dict, Depends(get_current_usuario)], projeto_delete: ProjetoDelete, session: Session = Depends(get_session)):
+    projeto = session.query(Projeto).filter(projeto_delete.id == Projeto.id, Projeto.usuario_id == user["id"]).first()
     if not projeto:
         raise HTTPException(status_code=404, detail='Projeto não encontrado')
 
     session.delete(projeto)
     session.commit()
 
-    # Retorna a lista de projetos atualizada
-    try:
-        projetos = session.query(Projeto).options(joinedload(Projeto.usuario)).all()
-        return {"deletado": projeto.nome,
-                "projetos ": projetos}
-    except:
-        return {
-            "deletado": projeto.nome,
-            "projetos ": []
-            }
+
+    projetos = await get_projetos_usuario(user, session)
+    return {"deletado": projeto.nome,
+            "projetos ": projetos}
 
 @router.delete('/deletar_varios')
-async def remover_multiplos_projetos(projeto_delete: ProjetosDelete, session: Session = Depends(get_session)):
+async def remover_multiplos_projetos(user: Annotated[dict, Depends(get_current_usuario)], projeto_delete: ProjetosDelete, session: Session = Depends(get_session)):
     projetos_deletados = []
     projetos_nao_encontrados = []
 
     for id in projeto_delete.ids:
         try:
-            projeto = session.query(Projeto).filter(id == Projeto.id).first()
+            projeto = session.query(Projeto).filter(id == Projeto.id, Projeto.usuario_id == user["id"]).first()
             if not projeto:
                 raise HTTPException(status_code=404, detail='Projeto não encontrado')
         
@@ -182,20 +152,9 @@ async def remover_multiplos_projetos(projeto_delete: ProjetosDelete, session: Se
         except HTTPException:
             projetos_nao_encontrados.append(id)
 
-    # Retorna a lista de projetos atualizada
-    try:
-        projetos = session.query(Projeto).options(joinedload(Projeto.usuario)).all()
-
-        return {
-            "projetos deletados": projetos_deletados,
-            "projetos não encontrados": projetos_nao_encontrados if projetos_nao_encontrados else [],
-            "projetos": projetos
-            }
-    
-    except:
-
-         return {
-             "projetos deletados": projetos_deletados,
-             "projetos não encontrados": projetos_nao_encontrados if projetos_nao_encontrados else [],
-             "projetos ": []
-             }
+    projetos = await get_projetos_usuario(user, session)
+    return {
+        "projetos deletados": projetos_deletados,
+        "projetos não encontrados": projetos_nao_encontrados if projetos_nao_encontrados else [],
+        "projetos": projetos
+        }

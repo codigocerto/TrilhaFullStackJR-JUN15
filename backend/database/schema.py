@@ -33,10 +33,10 @@ class Projeto(Base):
 class Usuario(Base):
     __tablename__ = 'usuario'
     id = Column(Integer, primary_key=True, autoincrement=True)
-    login = Column(String(255), nullable=False)
+    username = Column(String(255), nullable=False)
     nome = Column(String(255), nullable=False)
-    senha = Column(String(255), nullable=False)
-    desativado = Column(Boolean, default=False)
+    hashed_senha = Column(String(255), nullable=False)
+    ativo = Column(Boolean, default=True)
 
     projetos = relationship("Projeto", back_populates="usuario")
     
