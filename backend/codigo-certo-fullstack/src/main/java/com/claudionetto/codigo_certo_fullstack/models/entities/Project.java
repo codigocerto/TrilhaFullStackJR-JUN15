@@ -11,7 +11,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import java.time.Instant;
 
 @Entity
-@Table(name = "project")
+@Table(name = "projects")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
