@@ -8,6 +8,7 @@ public class UserMapper {
 
     public static UserResponseDTO transformEntityToResponse(User user){
         return UserResponseDTO.builder()
+                .id(user.getId())
                 .name(user.getName())
                 .surname(user.getSurname())
                 .username(user.getUsername())
