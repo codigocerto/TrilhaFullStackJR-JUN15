@@ -3,6 +3,7 @@ package com.claudionetto.codigo_certo_fullstack.dtos.requests;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 
 public record UserRegisterDTO(
 
@@ -16,7 +17,7 @@ public record UserRegisterDTO(
         @Email
         String email,
         @NotBlank
-        @Min(8)
+        @Size(min = 8)
         String password
 
 ){
