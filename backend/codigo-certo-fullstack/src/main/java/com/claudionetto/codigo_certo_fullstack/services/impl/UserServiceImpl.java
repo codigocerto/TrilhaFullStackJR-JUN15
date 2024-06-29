@@ -35,6 +35,8 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserResponseDTO save(UserRegisterDTO userRegisterDTO) {
 
+        validateUserRegistration(userRegisterDTO);
+
         User user = UserMapper.transformRegisterToUser(userRegisterDTO);
         User userSaved = userRepository.save(user);
 
@@ -112,5 +114,15 @@ public class UserServiceImpl implements UserService {
 
     private User findByIdOrThrowException(UUID id){
         return userRepository.findById(id).orElseThrow(EntityNotFoundException::new);
+    }
+
+    private void validateUserRegistration(UserRegisterDTO userRegisterDTO) {
+        userRepository.findByEmail(userRegisterDTO.email()).ifPresent(userEmail -> {
+            throw new RuntimeException("This email is already in use.");
+        });
+
+        userRepository.findByUsername(userRegisterDTO.username()).ifPresent(userName -> {
+            throw new RuntimeException("This username is already in use.");
+        });
     }
 }
