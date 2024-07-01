@@ -3,10 +3,12 @@ package com.claudionetto.codigo_certo_fullstack.services.impl;
 import com.claudionetto.codigo_certo_fullstack.dtos.mappers.UserMapper;
 import com.claudionetto.codigo_certo_fullstack.dtos.requests.*;
 import com.claudionetto.codigo_certo_fullstack.dtos.responses.UserResponseDTO;
+import com.claudionetto.codigo_certo_fullstack.exceptions.UserAlreadyExistsException;
+import com.claudionetto.codigo_certo_fullstack.exceptions.UserNotFoundException;
+import com.claudionetto.codigo_certo_fullstack.exceptions.UserIncorrectPasswordException;
 import com.claudionetto.codigo_certo_fullstack.models.entities.User;
 import com.claudionetto.codigo_certo_fullstack.repositories.UserRepository;
 import com.claudionetto.codigo_certo_fullstack.services.UserService;
-import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -67,7 +69,7 @@ public class UserServiceImpl implements UserService {
         User user = findByIdOrThrowException(id);
 
         if (!(user.getPassword().equals(userChangePasswordRequestDTO.currentPassword()))){
-            throw new RuntimeException("Password mismatches");
+            throw new UserIncorrectPasswordException("The current password is incorrect");
         }
 
         user.setPassword(userChangePasswordRequestDTO.newPassword());
@@ -82,7 +84,7 @@ public class UserServiceImpl implements UserService {
         User user = findByIdOrThrowException(id);
 
         userRepository.findByEmail(userChangeEmailRequestDTO.email()).ifPresent((existingUser) -> {
-            throw new RuntimeException("This email is already in use");
+            throw new UserAlreadyExistsException("This email is already in use");
         });
 
 
@@ -97,7 +99,7 @@ public class UserServiceImpl implements UserService {
         User user = findByIdOrThrowException(id);
 
         userRepository.findByUsername(userChangeUsernameRequestDTO.username()).ifPresent((existingUser) -> {
-            throw new RuntimeException("This username is already in use");
+            throw new UserAlreadyExistsException("This username is already in use");
         });
 
         user.setUsername(userChangeUsernameRequestDTO.username());
@@ -113,16 +115,17 @@ public class UserServiceImpl implements UserService {
     }
 
     private User findByIdOrThrowException(UUID id){
-        return userRepository.findById(id).orElseThrow(EntityNotFoundException::new);
+        return userRepository.findById(id).orElseThrow(() ->
+                new UserNotFoundException("User with ID " + id + " not found"));
     }
 
     private void validateUserRegistration(UserRegisterDTO userRegisterDTO) {
         userRepository.findByEmail(userRegisterDTO.email()).ifPresent(userEmail -> {
-            throw new RuntimeException("This email is already in use.");
+            throw new UserAlreadyExistsException("This email is already in use.");
         });
 
         userRepository.findByUsername(userRegisterDTO.username()).ifPresent(userName -> {
-            throw new RuntimeException("This username is already in use.");
+            throw new UserAlreadyExistsException("This username is already in use.");
         });
     }
 }
