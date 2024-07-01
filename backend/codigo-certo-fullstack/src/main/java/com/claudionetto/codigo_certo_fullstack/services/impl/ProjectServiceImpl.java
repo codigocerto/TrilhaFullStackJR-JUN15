@@ -3,6 +3,7 @@ package com.claudionetto.codigo_certo_fullstack.services.impl;
 import com.claudionetto.codigo_certo_fullstack.dtos.mappers.ProjectMapper;
 import com.claudionetto.codigo_certo_fullstack.dtos.requests.ProjectRequestDTO;
 import com.claudionetto.codigo_certo_fullstack.dtos.responses.ProjectResponseDTO;
+import com.claudionetto.codigo_certo_fullstack.exceptions.EntityNotFoundException;
 import com.claudionetto.codigo_certo_fullstack.models.entities.Project;
 import com.claudionetto.codigo_certo_fullstack.repositories.ProjectRepository;
 import com.claudionetto.codigo_certo_fullstack.services.ProjectService;
@@ -70,7 +71,7 @@ public class ProjectServiceImpl implements ProjectService {
 
     private Project findByIdOrThrowNotFoundException(Long id){
         return projectRepository.findById(id).orElseThrow( () ->
-                new RuntimeException("Project with ID " + id + " not found")
+                new EntityNotFoundException("Project with ID " + id + " not found")
         );
     }
 }
