@@ -20,12 +20,14 @@ async def login_for_acess_token(form_data: Annotated[OAuth2PasswordRequestForm, 
     if not usuario:
         raise HTTPException(status_code=401, detail="Não foi possível validar o usuário")
     
+    # token = criar_token_acesso(usuario.username, usuario.id, timedelta(seconds=1))
     token = criar_token_acesso(usuario.username, usuario.id, timedelta(minutes=20))
 
     return {'access_token': token, 'token_type': 'bearer'}
 
+@router.get("/usuario")
 async def get_current_usuario(token: Annotated[str, Depends(oauth2_scheme)]):
-    try:
+    try: 
         payload = jwt.decode(token, JWT_SECRET_KEY, algorithms=ALGORITHM)
         username: str = payload.get('sub')
         user_id: int = payload.get('id')

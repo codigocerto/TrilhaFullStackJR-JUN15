@@ -1,7 +1,7 @@
 import bcrypt
 import os
 from datetime import datetime, timedelta, timezone
-from jose import jwt
+import jwt
 from database.schema import Usuario, Session
 
 ALGORITHM = "HS256"
@@ -9,12 +9,15 @@ JWT_SECRET_KEY = os.environ.get('JWT_SECRET_KEY')
 
 def get_hashed_senha(senha):
     senha_bytes = senha.encode("utf-8")
-    return bcrypt.hashpw(senha_bytes, bcrypt.gensalt())
+    return bcrypt.hashpw(senha_bytes, bcrypt.gensalt()).decode('utf8')
 
 
 def verify_senha(senha, hashed_senha):
-    senha_bytes = senha.encode("utf-8")
-    return bcrypt.checkpw(senha_bytes, hashed_senha)
+    if type(senha) == str:
+        senha = senha.encode("utf-8")
+    if type(hashed_senha) == str:
+       hashed_senha = hashed_senha.encode("utf-8")
+    return bcrypt.checkpw(senha, hashed_senha)
 
 def criar_token_acesso(username: str, user_id: int, expires_delta: timedelta):
 

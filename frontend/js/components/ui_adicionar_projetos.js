@@ -1,57 +1,61 @@
 //importação das funções para adicionar um projeto, receber a lista de projetos,
 //e setar o array de projetos global
-import { addProjeto, importMeusProjetos, setProjetos } from "../data/data.js";
+import { addProjeto, importMeusProjetos, setMeusProjetos, setProjetosPublicos } from "../data/data.js";
 //função que recebe uma data e retorna uma indicação simples do prazo
 import { tempoRestante } from "./ui_pagina_projetos_publicos.js";
+
+//ícone de público e privado
+import { isPublicoIcon } from "./ui_pagina_meus_projetos.js";
 
 //elementos da página de exibição
 const projetoView = $("#view");
 const listaProjetos = $("#lista-projetos");
 const titulo = $("#titulo-lista");
-const anchor = $("#anchor");
-
-//adiciona a ação de rolar ao topo da lista ao clicar no anchor
-anchor.on("click", () => {
-    listaProjetos[0].scrollTop = 0;
-})
 
 //seção onde será mostrado o formulário para adicionar
 const projetoViewBox = $(`<div class="container my-5"></div>`);
 //container dentro da seção que será inserido o formulário
-const projetoViewBoxText = $(`<div id="view-box-text" class="p-5 text-center bg-body-tertiary rounded-3"></div>`);
+const projetoViewBoxText = $(`<div id="view-box-text" class="p-4 text-center bg-body-tertiary rounded-3"></div>`);
 
 //formulário para adicionar novo projeto
 const adicionarForm = $(`
     <form id="add-projeto-form">
-    <h1 class="text-body-emphasis mb-5">Adicionar Projeto</h1>
-    <div class="form-floating mb-3">
-        <input required type="text" class="form-control" id="floatingNomeProjeto" placeholder="Nome do Projeto">
-        <label for="floatingNomeProjeto">Nome do Projeto</label>
-    </div>
-    <div class="form-floating mb-3">
-        <textarea class="form-control" rows="10" style="height:100%" id="floatingDescricao" placeholder="Descrição do Projeto"></textarea>
-        <label for="floatingDescricao">Descrição do Projeto</label>
-    </div>
-    <div class="form-check">
-        <span class="check-remove">
-            <input class="form-check-input" type="checkbox" value="" id="flexCheckPrazo">
-            <label class="form-check-label" for="flexCheckPrazo">&nbsp;&nbsp;Incluir prazo</label>
-        </span>
-    </div>
-    <div class="form-floating">
-        <input type="date" class="form-control" id="floatingPrazo">
-        <label for="floatingPrazo">Prazo do Projeto</label>
-    </div>
-    <button id="botao-submit" type="submit" class="btn btn-primary mt-4">Adicionar Projeto</button>
+        <select id="is-publico" class="form-select form-select-sm" style="width: 95px;" aria-label="Default select example">
+            <option value="privado" selected>Privado</option>
+            <option value="publico">Público</option>
+        </select>
+        <h1 class="text-body-emphasis mb-5">Adicionar Projeto</h1>
+        <div class="form-floating mb-3">
+            <input required type="text" class="form-control" id="floatingNomeProjeto" placeholder="Nome do Projeto">
+            <label for="floatingNomeProjeto">Nome do Projeto</label>
+        </div>
+        <div class="form-floating mb-3">
+            <textarea class="form-control" rows="10" style="height:100%" id="floatingDescricao" placeholder="Descrição do Projeto"></textarea>
+            <label for="floatingDescricao">Descrição do Projeto (opcional)</label>
+        </div>
+        <div class="form-check">
+            <span class="check-remove">
+                <input class="form-check-input" type="checkbox" value="" id="flexCheckPrazo">
+                <label class="form-check-label" for="flexCheckPrazo">&nbsp;&nbsp;Incluir prazo</label>
+            </span>
+        </div>
+        <div class="form-floating">
+            <input type="date" class="form-control" id="floatingPrazo">
+            <label for="floatingPrazo">Prazo do Projeto</label>
+        </div>
+        <button id="botao-submit" type="submit" class="btn btn-primary mt-4">Adicionar Projeto</button>
     </form>`)
 
 
 //função que cria um item da lista, o item não é clicável e é indicado como desativado
-function criarItemLista(id, nome, prazo) {
+function criarItemLista(id, nome, prazo, is_publico) {
 
     const itemLista = $(`<a id="${id}" role="button" class="disabled list-group-item list-group-item-action py-3 lh-sm" aria-current="true">
                             <div class="d-flex w-100 align-items-center justify-content-between">
-                                <strong class="mb-1 px-2">${nome}</strong>
+                                <span>
+                                    ${isPublicoIcon[Number(is_publico)]}
+                                    <strong class="mb-1 px-2">${nome}</strong>
+                                </span>
                                 <small>${tempoRestante(prazo)}</small>
                             </div>
                         </a>`);
@@ -65,7 +69,7 @@ function criarListaProjetos(projetos){
     listaProjetos.empty();
     projetos.forEach(projeto => {
 
-        const itemLista = criarItemLista(projeto.id, projeto.nome, projeto.prazo);
+        const itemLista = criarItemLista(projeto.id, projeto.nome, projeto.prazo, projeto.is_publico);
         listaProjetos.append(itemLista);
     });
 }
@@ -81,6 +85,7 @@ export function showAdicionarProjeto() {
     const inputDescricaoProjeto = adicionarForm.find("#floatingDescricao");
     const inputCheckPrazo = adicionarForm.find("#flexCheckPrazo");
     const inputPrazo = adicionarForm.find("#floatingPrazo");
+    const inputIsPublico = adicionarForm.find("#is-publico");
     
     titulo.empty();
     listaProjetos.empty();
@@ -132,16 +137,16 @@ export function showAdicionarProjeto() {
         const descricao = inputDescricaoProjeto.val();
         //atribui o prazo caso o checkbox esteja marcado, atribui null caso contrário
         const prazo = inputCheckPrazo.is(":checked") && inputPrazo.val() ? new Date(inputPrazo.val() + "T23:59:59") : null;
+        const is_publico = inputIsPublico.val() === "publico" ? true : false;
         
         //cria um objeto com os atributos
-        const novoProjeto = {nome, descricao, prazo}
+        const novoProjeto = {nome, descricao, prazo, is_publico}
         //envia o objeto como parametro para ser adicionado, e armazena o retorno
         const atualizacaoProjetos = await addProjeto(novoProjeto);
-
         //a chave "projetos" contém o array de projetos atualizado
-        criarListaProjetos(atualizacaoProjetos["projetos"]);
-        setProjetos(atualizacaoProjetos["projetos"])
-        projetos = atualizacaoProjetos["projetos"];
+        criarListaProjetos(atualizacaoProjetos["meus_projetos"]);
+        setMeusProjetos(atualizacaoProjetos["meus_projetos"]);
+        setProjetosPublicos(atualizacaoProjetos["projetos_publicos"])
         alert(`${nome} criado com sucesso!`);
 
 

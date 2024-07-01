@@ -1,17 +1,14 @@
 //importação das funções para remover um projeto, receber a lista de projetos,
 //e setar o array de projetos global
-import { removerProjeto, importMeusProjetos, setProjetos } from "../data/data.js";
+import { removerProjeto, importMeusProjetos, setMeusProjetos, setProjetosPublicos } from "../data/data.js";
+
+//ícone de público e privado
+import { isPublicoIcon } from "./ui_pagina_meus_projetos.js";
 
 //elementos da página de exibição
 const listaProjetos = $("#lista-projetos")
 const projetoView = $("#view");
 const titulo = $("#titulo-lista");
-const anchor = $("#anchor");
-
-//adiciona a ação de rolar ao topo da lista ao clicar no anchor
-anchor.on("click", () => {
-    listaProjetos[0].scrollTop = 0;
-})
 
 //seção onde será mostrado as informações
 const projetoViewBox = $(`<div class="container my-5"></div>`);
@@ -30,12 +27,15 @@ exclusaoBotao.prepend(exclusaoBotaoIcon);
 
 const listaParaRemover = $(`<ul class="list-group"></ul>`)
 
-function criarItemLista(id, nome) {
+function criarItemLista(id, nome, is_publico) {
 
     //o value de cada elemento é colocado como o id do item
     const itemLista = $(`<label for="flexCheck-${id}" id="${id}" role="button" class="list-group-item list-group-item-action py-3 lh-sm" aria-current="true">
                             <div class="d-flex w-100 align-items-center justify-content-between">
-                                <strong class="mb-1 px-2">${nome}</strong>
+                                <span>
+                                    ${isPublicoIcon[Number(is_publico)]}
+                                    <strong class="mb-1 px-2">${nome}</strong>
+                                </span>
                                 <div class="check-remove" id="check-remover-${id}">
                                     <label for="flexCheck-${id}" class="form-check-label">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash3-fill" viewBox="0 0 16 16">
@@ -85,7 +85,7 @@ function criarListaProjetos(projetos, setRemover){
     listaProjetos.empty();
     
     projetos.forEach(projeto => {
-        const itemLista = criarItemLista(projeto.id, projeto.nome);
+        const itemLista = criarItemLista(projeto.id, projeto.nome, projeto.is_publico);
         listaProjetos.append(itemLista);
     });
 
@@ -115,7 +115,7 @@ function criarListaProjetos(projetos, setRemover){
 
 //cria toda página de remoção dos projetos, chamada ao clicar na aba Remover
 export async function showRemoverProjetos() {
-    let projetos = getListaProjetos();
+    let projetos = importMeusProjetos();
     let setRemover = new Set();
     
     titulo.empty();
@@ -152,12 +152,13 @@ export async function showRemoverProjetos() {
              //envia as IDs para serem removidas, e armazena o retorno
             const atualizacaoProjetos = await removerProjeto(arrayIdNumeros);
             
-            //limpa do set de remoção, e atualiza a lista de projetos e a lista de visualização
+            //limpa o set de remoção, atualiza a lista de projetos e a lista de visualização
             setRemover.clear();
             listaParaRemover.html(createListaParaRemover(setRemover, atualizacaoProjetos["projetos"]));
             //a chave "projetos" contém o array de projetos atualizado
-            criarListaProjetos(atualizacaoProjetos["projetos"], setRemover);
-            setProjetos(atualizacaoProjetos["projetos"]);
+            criarListaProjetos(atualizacaoProjetos["projetos"]["meus_projetos"], setRemover);
+            setMeusProjetos(atualizacaoProjetos["projetos"]["meus_projetos"]);
+            setProjetosPublicos(atualizacaoProjetos["projetos"]["projetos_publicos"])
             exclusaoBotao.addClass("disabled");
 
         }

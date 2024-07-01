@@ -11971,7 +11971,6 @@ textarea.form-control-lg {
 
 #area {
   display: flex;
-  height: calc(100vh - 42px);
 }
 
 #view {
@@ -11999,17 +11998,22 @@ textarea.form-control-lg {
   display: flex;
 }
 
-#sidebar {
+#sidebar, #anchor {
   width: 380px;
+}
+
+#sidebar {
+  max-height: calc(100vh - 118px);
 }
 
 @media only screen and (max-width: 600px) {
   #area {
     display: block;
+    height: auto;
     justify-items: stretch;
   }
-  #sidebar {
-    max-height: 45vh;
+  #sidebar, #anchor {
+    max-height: 40vh;
     width: 100vw;
   }
 }/*# sourceMappingURL=styles.css.map */

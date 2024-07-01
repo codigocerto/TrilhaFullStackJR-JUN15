@@ -19,7 +19,7 @@ async def get_projetos_publicos(session: Session = Depends(get_session)):
             "nome": projeto.nome,
             "descricao": projeto.descricao,
             "prazo": projeto.prazo,
-            "usuario": projeto.usuario.nome,
+            "usuario": projeto.usuario.username,
         } for projeto in projetos]
     
     return []
@@ -33,6 +33,12 @@ async def get_projetos_usuario(user: Annotated[dict, Depends(get_current_usuario
     
     return []
 
+async def get_projetos_atualizacao(user: Annotated[dict, Depends(get_current_usuario)], session: Session = Depends(get_session)):
+    return {
+        "meus_projetos": await get_projetos_usuario(user, session),
+        "projetos_publicos": await get_projetos_publicos(session),
+        "usuario": user
+    }
 
 @router.post('/criar')
 async def registrar_projeto(user: Annotated[dict, Depends(get_current_usuario)], projeto_input: ProjetoInput, session: Session = Depends(get_session)):
@@ -50,7 +56,7 @@ async def registrar_projeto(user: Annotated[dict, Depends(get_current_usuario)],
     session.add(projeto)
     session.commit()
     
-    return await get_projetos_usuario(user, session)
+    return await get_projetos_atualizacao(user, session)
 
 @router.post('/criar_varios')
 async def registrar_multiplos_projetos(user: Annotated[dict, Depends(get_current_usuario)], projetos_input: MultProjetosInput, session: Session = Depends(get_session)):
@@ -81,7 +87,7 @@ async def registrar_multiplos_projetos(user: Annotated[dict, Depends(get_current
                 "erro": str(erro.detail)
             })
 
-    projetos = await get_projetos_usuario(user, session)
+    projetos = await get_projetos_atualizacao(user, session)
     return {
         "projetos inseridos": projetos_inseridos,
         "projetos com erro": projetos_com_erro if projetos_com_erro else 0,
@@ -101,14 +107,14 @@ async def alterar_projeto(user: Annotated[dict, Depends(get_current_usuario)], p
         projeto.descricao = projeto_update.descricao
     if projeto_update.prazo != "":
         projeto.prazo = projeto_update.prazo
-    if projeto_update.is_publico:
+    if projeto_update.is_publico != "":
         projeto.is_publico = projeto_update.is_publico
     
     session.add(projeto)
     session.commit()
     
 
-    projetos = await get_projetos_usuario(user, session)
+    projetos = await get_projetos_atualizacao(user, session)
     return {
         "projeto atualizado":{
             "id": projeto.id,
@@ -130,7 +136,7 @@ async def remover_projeto(user: Annotated[dict, Depends(get_current_usuario)], p
     session.commit()
 
 
-    projetos = await get_projetos_usuario(user, session)
+    projetos = await get_projetos_atualizacao(user, session)
     return {"deletado": projeto.nome,
             "projetos ": projetos}
 
@@ -152,7 +158,7 @@ async def remover_multiplos_projetos(user: Annotated[dict, Depends(get_current_u
         except HTTPException:
             projetos_nao_encontrados.append(id)
 
-    projetos = await get_projetos_usuario(user, session)
+    projetos = await get_projetos_atualizacao(user, session)
     return {
         "projetos deletados": projetos_deletados,
         "projetos não encontrados": projetos_nao_encontrados if projetos_nao_encontrados else [],

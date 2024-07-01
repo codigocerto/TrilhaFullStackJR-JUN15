@@ -1,3 +1,5 @@
+import { logout } from "../components/ui_login.js";
+
 //arquivo de conexões com a API
 
 //ícone de carregamento
@@ -37,7 +39,6 @@ export async function getProjetosPublicos(){
 //requisita a lista de todos os projetos do usuário
 export async function getMeusProjetos(){
     if(localStorage.getItem('access_token') == ''){
-        console.log("return");
         return;
     }
     loadingSpinner();
@@ -50,6 +51,10 @@ export async function getMeusProjetos(){
     }
     try{
         const response = await fetch (`${URL}/projetos/usuario`, options);
+        if(response.status === 401){
+            alert(`Sessão expirada. Faça login novamente`);
+            logout();
+        }
         if(!response.ok){
             throw new Error(`HTTP error! status: ${response.status}`);
         }
@@ -73,14 +78,18 @@ export async function addProjeto(dadosProjeto){
     const options = {
         method: 'POST',
         headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${localStorage.getItem('access_token')}`
         },
         body: JSON.stringify(dadosProjeto)
     };
 
     try{
         const response = await fetch(`${URL}/projetos/criar`, options);
-        
+        if(response.status === 401){
+            alert(`Sessão expirada. Faça login novamente`);
+            logout();
+        }
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
         }
@@ -103,13 +112,18 @@ export async function editarProjeto(dadosProjeto){
     const options = {
         method: 'PUT',
         headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${localStorage.getItem('access_token')}`
         },
         body: JSON.stringify(dadosProjeto)
     };
 
     try{
         const response = await fetch(`${URL}/projetos/editar`, options);
+        if(response.status === 401){
+            alert(`Sessão expirada. Faça login novamente`);
+            logout();
+        }
         
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
@@ -132,14 +146,18 @@ export async function removerProjeto(ids){
     const options = {
         method: 'DELETE',
         headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${localStorage.getItem('access_token')}`
         },
         body: JSON.stringify({"ids": ids})
     };
 
     try{
         const response = await fetch(`${URL}/projetos/deletar_varios`, options);
-        
+        if(response.status === 401){
+            alert(`Sessão expirada. Faça login novamente`);
+            logout();
+        }
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
         }
@@ -160,6 +178,98 @@ export async function removerProjeto(ids){
 
 }
 
+//criação de conta
+export async function cadastrar_usuario(username, password){
+    loadingSpinner();
+    const options = {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            "username": username,
+            "senha": password
+        })
+    };
+    try{
+        const response = await fetch(`${URL}/usuarios/cadastrar`, options);
+        if(response.status === 409){
+            loadingSpinner();
+            return false;
+        }
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        
+        const data = await response.json();
+        loadingSpinner();
+        return data;
+    }
+    catch(error){
+        loadingSpinner();
+        console.error(error);
+    }
+}
+
+//deletar conta
+export async function deletar_usuario(){
+    loadingSpinner();
+    const options = {
+        method: 'DELETE',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${localStorage.getItem('access_token')}`
+        }
+    };
+    try{
+        const response = await fetch(`${URL}/usuarios/deletar`, options);
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        
+        const data = await response.json();
+        loadingSpinner();
+        return data;
+    }
+    catch(error){
+        alert("Não foi possível deletar a conta.")
+        loadingSpinner();
+        console.error(error);
+    }
+}
+//alterar senha
+export async function alterar_senha(password){
+    loadingSpinner();
+    const options = {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${localStorage.getItem('access_token')}`
+        },
+        body: JSON.stringify({
+            "username": "",
+            "senha": password,
+            "ativo": null
+        })
+    };
+    try{
+        const response = await fetch(`${URL}/usuarios/editar`, options);
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        
+        const data = await response.json();
+        loadingSpinner();
+        return data;
+    }
+    catch(error){
+        loadingSpinner();
+        alert("Não foi possível alterar a senha");
+        console.error(error);
+    }
+}
+
+
 //autenticação do usuário
 export async function validar_usuario(username, password){
     loadingSpinner();
@@ -175,16 +285,15 @@ export async function validar_usuario(username, password){
     };
     try{
         const response = await fetch(`${URL}/auth/token`, options);
-        
+        if(response.status === 401){
+            loadingSpinner();
+            return false;
+        }
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
         }
         
         const data = await response.json();
-
-        // if(data["projetos não encontrados"].length > 0){
-        //     throw new Error(`O seguintes projetos não puderam ser removidos ${data["projetos não encontrados"].join(" ")}`);
-        // }
         loadingSpinner();
         return data;
     }
@@ -194,31 +303,57 @@ export async function validar_usuario(username, password){
     }
 }
 
+//remove os projetos com os ids passados, e retorna a lista de projetos atualizada
+export async function getUsuarioAtivo(){
+    if(localStorage.getItem('access_token') == ''){
+        return;
+    }
+    loadingSpinner();
+    const options = {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${localStorage.getItem('access_token')}`
+        }
+    };
+
+    try{
+        const response = await fetch(`${URL}/auth/usuario`, options);
+        if(response.status === 401){
+            alert(`Sessão expirada. Faça login novamente`);
+            logout();
+        }
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        
+        const data = await response.json();
+        loadingSpinner();
+        return data;
+    }
+    catch(error){
+        console.error(error);
+    }
+    loadingSpinner();
+
+}
+
 //recebe e armazena a lista de projetos públicos
-let projetosPublicos = await getProjetosPublicos();
-if(!projetosPublicos){
-    alert("Não foi possível se conectar ao servidor.");
+let projetosPublicos;
+export async function atualizarProjetosPublicos(){
+    projetosPublicos = await getProjetosPublicos();
 }
 export function importProjetosPublicos(){
     return projetosPublicos;
 }
-export function setProjetos(atualizacaoProjetos){
-    projetos = atualizacaoProjetos;
+export function setProjetosPublicos(atualizacaoProjetos){
+    projetosPublicos = atualizacaoProjetos;
 }
 
 //recebe e armazena a lista de projetos do usuário
-let logado= false;
 let meusProjetos;
-// let meusProjetos = await getMeusProjetos();
-// if(meusProjetos){
-//     logado = true;
-// }
-// else{
-//     console.error("Usuário não conectado");
-// }
 export async function atualizarMeusProjetos(){
     meusProjetos = await getMeusProjetos();
-    console.log(meusProjetos);
     if(meusProjetos){
         return true;
     }
@@ -229,4 +364,11 @@ export function importMeusProjetos(){
 }
 export function setMeusProjetos(atualizacaoProjetos){
     meusProjetos = atualizacaoProjetos;
+}
+
+//retorna o usuário ativo
+let usuarioAtivo;
+export async function atualizarUsuarioAtivo(){
+    usuarioAtivo = await getUsuarioAtivo();
+    return usuarioAtivo
 }

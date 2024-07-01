@@ -5,16 +5,17 @@ import { importProjetosPublicos } from "../data/data.js";
 const projetoView = $("#view"); 
 const listaProjetos = $("#lista-projetos");
 const titulo = $("#titulo-lista");
-const anchor = $("#anchor"); //anchor no topo da lista com o título da lista
+// const sidebar = $("#sidebar");
 
-//adiciona a ação de rolar ao topo da lista ao clicar no anchor
-anchor.on("click", () => {
-    listaProjetos[0].scrollTop = 0;
-})
+const userIcon = `
+    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-person-circle" viewBox="0 0 16 16">
+        <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0"/>
+        <path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8m8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1"/>
+    </svg>`;
 
 
 //criação da página com informações de cada projeto
-function criarPaginaProjeto(nome, descricao, prazo, criacao) {
+function criarPaginaProjeto(nome, descricao, prazo, criacao, usuario) {
     projetoView.empty();
     
     //cria objeto Date a partir da string de datas de criação e prazo, com adição de 'Z' para horário em UTC
@@ -22,14 +23,23 @@ function criarPaginaProjeto(nome, descricao, prazo, criacao) {
     const datePrazo = new Date(prazo  + 'Z');
 
     //formatação das datas para horário e localização em pt-BR
-    const labelCriacao = `<p>Criado: ${dateCriacao.toLocaleDateString('pt-BR')} </p>`;
-    const labelPrazo = prazo ? `<p>Prazo: ${datePrazo.toLocaleDateString('pt-BR')}</p>` : "";
+    const labelCriacao = `Criado: ${dateCriacao.toLocaleDateString('pt-BR')}`;
+    const labelPrazo = prazo ? `Prazo: ${datePrazo.toLocaleDateString('pt-BR')}` : "";
 
     //criação do container com as informações do projeto
     const projetoViewBox = $(
         `<div class="container my-5">
             <div class="p-5 text-center bg-body-tertiary rounded-3">
-                <span id="horario" class="text-muted">${labelPrazo}${labelCriacao}</span>
+                <div id="horario" class="text-muted d-flex flex-wrap-reverse justify-content-between">
+                    <span class="d-flex" style="gap:10px;">
+                        <p>${labelPrazo}</p>
+                        <p>${labelCriacao}</p>
+                    </span>
+                    <span class="d-flex" style="gap:10px;">
+                    ${userIcon}
+                        ${usuario}
+                    </span>
+                </div>
                 <h1 class="text-body-emphasis mb-4">${nome}</h1>
                 <p class="lead">${descricao}</p>
             </div>
@@ -52,53 +62,60 @@ export function tempoRestante(prazo){
 
     const dataDoPrazo = new Date(prazoDate)
     const dataDeAgora = new Date(nowDate);
+    const diferencaDias = Math.floor((prazoDate - nowDate) / (1000 * 60 * 60 * 24));
+    console.log(diferencaDias);
+
+    if(prazoDate < nowDate){
+        return "Vencido";
+    }
 
     //retorna o ano do prazo, caso não seja o ano atual
     if(dataDoPrazo.getFullYear() > dataDeAgora.getFullYear()){
         return dataDoPrazo.getFullYear()
     }
-
     //retorna o mês do prazo, caso não seja o mês atual
-    if(dataDoPrazo.getMonth() > dataDeAgora.getMonth()){
+    if(dataDoPrazo.getMonth() > dataDeAgora.getMonth() && diferencaDias > 7){
         return dataDoPrazo.toLocaleDateString('pt-BR', {month: "short"}, { timeZone: 'UTC'})
     }
 
     //retorna o número dias
-    if(dataDoPrazo.getDate() - dataDeAgora.getDate() > 1){
-        return dataDoPrazo.getDate() - dataDeAgora.getDate() + " dias";
+    if(diferencaDias > 1){
+        return diferencaDias + " dias";
     }
     
-    if(dataDoPrazo.getDate() - dataDeAgora.getDate() > 0){
+    if(diferencaDias == 1){
         return "Amanhã";
     }
     
-    if(dataDoPrazo.getDate() - dataDeAgora.getDate() === 0){
+    if(diferencaDias === 0){
         return "Hoje";
     }
-    
-    //se o prazo tenha passado, retorna vencido
-    return "Vencido";
-
+    return undefined;
 }
 
 //função que cria um item da lista , que mostra as informações do projeto ao ser clicado
-function criarItemLista(id, nome, descricao, prazo, criacao) {
+function criarItemLista(id, nome, descricao, prazo, criacao, usuario) {
 
     const itemLista = $(`<a id="${id}" role="button" class="list-group-item list-group-item-action py-3 lh-sm" aria-current="true">
                             <div class="d-flex w-100 align-items-center justify-content-between">
-                                <strong class="mb-1 px-2">${nome}</strong>
+                                <span class="d-flex flex-column mb-1 px-2">
+                                    <strong class="">${nome}</strong>
+                                    <small>${usuario}</small>
+                                </span>
                                 <small>${tempoRestante(prazo)}</small>
                             </div>
                         </a>`);
 
     itemLista.on("click", () => {
-        criarPaginaProjeto(nome, descricao, prazo, criacao);
+        criarPaginaProjeto(nome, descricao, prazo, criacao, usuario);
     })
     return itemLista;
 }
 
 //cria toda página de exibição do projeto, chamada ao clicar na aba Projetos
 export async function showProjetosPublicos() {
+    
+    
     let projetos = importProjetosPublicos();
     listaProjetos.empty();
     projetoView.empty();
@@ -111,9 +128,9 @@ export async function showProjetosPublicos() {
                 <h1 class="text-body-emphasis">Selecione um Projeto</h1>
             </div>
         </div>`);
-        //caso não haja projetos, mostra "Adicione um Projeto"
-        if(!projetos.length){
-        projetoViewBox.find("h1").text("Adicione um Projeto");
+    //caso não haja projetos, mostra "Adicione um Projeto"
+    if(!projetos.length){
+    projetoViewBox.find("h1").text("Adicione um Projeto");
     }
     projetoView.append(projetoViewBox);
     
@@ -130,7 +147,7 @@ export async function showProjetosPublicos() {
     //cria um item da lista pra cada projeto armazenado no array de projetos
     projetos.forEach(projeto => {
 
-        const itemLista = criarItemLista(projeto.id, projeto.nome, projeto.descricao, projeto.prazo, projeto.criacao);
+        const itemLista = criarItemLista(projeto.id, projeto.nome, projeto.descricao, projeto.prazo, projeto.criacao, projeto.usuario);
         itemLista.on("click", () => {
             $(".list-group-item").removeClass("active");
             itemLista.addClass("active");
