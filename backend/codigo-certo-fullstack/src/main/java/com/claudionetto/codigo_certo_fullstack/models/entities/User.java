@@ -1,36 +1,43 @@
 package com.claudionetto.codigo_certo_fullstack.models.entities;
 
-import com.claudionetto.codigo_certo_fullstack.models.enums.ProjectStatus;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.Instant;
+import java.util.List;
+import java.util.UUID;
 
 @Entity
-@Table(name = "projects")
+@Table(name = "users")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Project {
+public class User {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private UUID id;
 
     private String name;
-    private String description;
+    private String surname;
 
-    @Enumerated(EnumType.STRING)
-    private ProjectStatus projectStatus;
+    @Column(unique = true)
+    private String username;
+
+    @Column(unique = true)
+    private String email;
+
+    private String password;
 
     @CreationTimestamp
     private Instant createdAt;
-
+    @UpdateTimestamp
     private Instant updateAt;
 
 }
