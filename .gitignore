@@ -6,3 +6,4 @@ venv/
 .env
 README old.md
 backend/database/projetos_database old.db
+backend/database/projetos_database.db
