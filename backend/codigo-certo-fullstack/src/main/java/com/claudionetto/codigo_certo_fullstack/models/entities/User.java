@@ -35,6 +35,9 @@ public class User {
 
     private String password;
 
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Project> projects;
+
     @CreationTimestamp
     private Instant createdAt;
     @UpdateTimestamp
