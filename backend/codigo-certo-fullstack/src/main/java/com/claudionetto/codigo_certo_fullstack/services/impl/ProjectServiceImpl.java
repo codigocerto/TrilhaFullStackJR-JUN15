@@ -32,42 +32,6 @@ public class ProjectServiceImpl implements ProjectService {
         return projects.map(ProjectMapper::transformEntityToResponse);
     }
 
-    @Override
-    public ProjectResponseDTO save(ProjectRequestDTO projectRequestDTO) {
-
-        Project project = ProjectMapper.transformRequestToEntity(projectRequestDTO);
-        Project projectSaved = projectRepository.save(project);
-
-        return ProjectMapper.transformEntityToResponse(projectSaved);
-    }
-
-    @Override
-    public ProjectResponseDTO update(Long id, ProjectRequestDTO projectRequestDTO) {
-
-        Project project = findByIdOrThrowNotFoundException(id);
-
-        if (projectRequestDTO.name() != null){
-            project.setName(projectRequestDTO.name());
-        }
-        if (projectRequestDTO.description() != null){
-            project.setDescription(projectRequestDTO.description());
-        }
-        if (projectRequestDTO.projectStatus() != null){
-            project.setProjectStatus(projectRequestDTO.projectStatus());
-        }
-
-        Project projectSaved = projectRepository.save(project);
-
-        return ProjectMapper.transformEntityToResponse(projectSaved);
-    }
-
-    @Override
-    public void deleteById(Long id) {
-
-        findByIdOrThrowNotFoundException(id);
-        projectRepository.deleteById(id);
-
-    }
 
     private Project findByIdOrThrowNotFoundException(Long id){
         return projectRepository.findById(id).orElseThrow( () ->
