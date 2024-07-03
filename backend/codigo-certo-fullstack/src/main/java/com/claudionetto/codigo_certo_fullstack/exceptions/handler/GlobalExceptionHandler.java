@@ -1,8 +1,6 @@
 package com.claudionetto.codigo_certo_fullstack.exceptions.handler;
 
-import com.claudionetto.codigo_certo_fullstack.exceptions.UserAlreadyExistsException;
-import com.claudionetto.codigo_certo_fullstack.exceptions.UserIncorrectPasswordException;
-import com.claudionetto.codigo_certo_fullstack.exceptions.UserNotFoundException;
+import com.claudionetto.codigo_certo_fullstack.exceptions.*;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ProblemDetail;
@@ -30,7 +28,20 @@ public class GlobalExceptionHandler {
 
         ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.NOT_FOUND, ex.getMessage());
         problemDetail.setType(URI.create("errors/user-not-found"));
-        problemDetail.setTitle("Not found exception, check the documentation");
+        problemDetail.setTitle("User not found exception, check the documentation");
+        problemDetail.setProperty("timeStamp", LocalDateTime.now());
+
+        return problemDetail;
+    }
+
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    @ExceptionHandler(EntityNotFoundException.class)
+    public ProblemDetail handleEntityNotFoundException(
+            EntityNotFoundException ex, HttpServletRequest request) {
+
+        ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.NOT_FOUND, ex.getMessage());
+        problemDetail.setType(URI.create("errors/entity-not-found"));
+        problemDetail.setTitle("Entity not found exception, check the documentation");
         problemDetail.setProperty("timeStamp", LocalDateTime.now());
 
         return problemDetail;
@@ -57,6 +68,19 @@ public class GlobalExceptionHandler {
         ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.UNAUTHORIZED, ex.getMessage());
         problemDetail.setType(URI.create("errors/user-incorrect-password"));
         problemDetail.setTitle("User incorrect password exception, check the documentation");
+        problemDetail.setProperty("timeStamp", LocalDateTime.now());
+
+        return problemDetail;
+    }
+
+    @ResponseStatus(HttpStatus.FORBIDDEN)
+    @ExceptionHandler(ProjectNotBelongToUserException.class)
+    public ProblemDetail handleProjectNotBelongToUserException(
+            ProjectNotBelongToUserException ex, HttpServletRequest request) {
+
+        ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.UNAUTHORIZED, ex.getMessage());
+        problemDetail.setType(URI.create("errors/project-not-belong-to-user"));
+        problemDetail.setTitle("Project not belong to user exception, check the documentation");
         problemDetail.setProperty("timeStamp", LocalDateTime.now());
 
         return problemDetail;
@@ -99,4 +123,6 @@ public class GlobalExceptionHandler {
 
         return problemDetail;
     }
+
+
 }
