@@ -8,6 +8,7 @@ public record ProjectResponseDTO(
         Long id,
         String name,
         String description,
-        ProjectStatus projectStatus
+        ProjectStatus projectStatus,
+        ProjectUserResponseDTO projectUserResponse
 ) {
 }

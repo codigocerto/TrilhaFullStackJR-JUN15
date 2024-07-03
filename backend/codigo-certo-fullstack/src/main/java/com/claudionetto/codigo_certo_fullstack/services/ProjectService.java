@@ -10,8 +10,5 @@ public interface ProjectService {
 
     ProjectResponseDTO findById(Long id);
     Page<ProjectResponseDTO> findAll(Pageable pageable);
-    ProjectResponseDTO save(ProjectRequestDTO projectRequestDTO);
-    ProjectResponseDTO update(Long id, ProjectRequestDTO projectRequestDTO);
-    void deleteById(Long id);
 
 }
