@@ -7,7 +7,10 @@ public record UserChangePasswordRequestDTO (
         @NotBlank
         String currentPassword,
         @NotBlank
-        @Size(min = 8)
-        String newPassword
+        @Size(min = 8, max = 255)
+        String newPassword,
+        @NotBlank
+        @Size(min = 8, max = 255)
+        String confirmationNewPassword
 ){
 }
