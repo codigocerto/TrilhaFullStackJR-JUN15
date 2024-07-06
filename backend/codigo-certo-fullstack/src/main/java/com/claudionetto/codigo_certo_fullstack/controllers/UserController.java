@@ -1,6 +1,9 @@
 package com.claudionetto.codigo_certo_fullstack.controllers;
 
-import com.claudionetto.codigo_certo_fullstack.dtos.requests.*;
+import com.claudionetto.codigo_certo_fullstack.dtos.requests.UserChangeEmailRequestDTO;
+import com.claudionetto.codigo_certo_fullstack.dtos.requests.UserChangePasswordRequestDTO;
+import com.claudionetto.codigo_certo_fullstack.dtos.requests.UserChangeProfileRequestDTO;
+import com.claudionetto.codigo_certo_fullstack.dtos.requests.UserChangeUsernameRequestDTO;
 import com.claudionetto.codigo_certo_fullstack.dtos.responses.UserChangeEmailResponseDTO;
 import com.claudionetto.codigo_certo_fullstack.dtos.responses.UserChangeUsernameResponseDTO;
 import com.claudionetto.codigo_certo_fullstack.dtos.responses.UserResponseDTO;
@@ -12,7 +15,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.net.URI;
 import java.util.UUID;
 
 @RestController
