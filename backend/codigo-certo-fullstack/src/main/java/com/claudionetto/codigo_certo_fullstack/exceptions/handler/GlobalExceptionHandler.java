@@ -78,9 +78,22 @@ public class GlobalExceptionHandler {
     public ProblemDetail handleProjectNotBelongToUserException(
             ProjectNotBelongToUserException ex, HttpServletRequest request) {
 
-        ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.UNAUTHORIZED, ex.getMessage());
+        ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.FORBIDDEN, ex.getMessage());
         problemDetail.setType(URI.create("errors/project-not-belong-to-user"));
         problemDetail.setTitle("Project not belong to user exception, check the documentation");
+        problemDetail.setProperty("timeStamp", LocalDateTime.now());
+
+        return problemDetail;
+    }
+
+    @ResponseStatus(HttpStatus.FORBIDDEN)
+    @ExceptionHandler(ResourceAccessDeniedException.class)
+    public ProblemDetail handleResourceAccessException(
+            ResourceAccessDeniedException ex, HttpServletRequest request) {
+
+        ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.FORBIDDEN, ex.getMessage());
+        problemDetail.setType(URI.create("errors/resource-access-denied-exception"));
+        problemDetail.setTitle("Resource access denied, check the documentation");
         problemDetail.setProperty("timeStamp", LocalDateTime.now());
 
         return problemDetail;

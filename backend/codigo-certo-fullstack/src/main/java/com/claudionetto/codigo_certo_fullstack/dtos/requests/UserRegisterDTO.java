@@ -12,12 +12,13 @@ public record UserRegisterDTO(
         @NotBlank
         String surname,
         @NotBlank
+        @Size(min = 6, max = 40)
         String username,
         @NotBlank
         @Email
         String email,
         @NotBlank
-        @Size(min = 8)
+        @Size(min = 8, max = 255)
         String password
 
 ){
